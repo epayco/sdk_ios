@@ -1,4 +1,4 @@
-class Epayco {
+public class Epayco {
     let publicKey: String
     let privateKey: String
     let lang: String
