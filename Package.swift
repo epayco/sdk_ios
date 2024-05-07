@@ -21,7 +21,7 @@ let package = Package(
         .target(
             name: "epayco-ios",
             dependencies: [],
-            sources:["Epayco.swift"]
+            sources:["epayco_ios.swift"]
             ),
         .testTarget(
             name: "epayco-iosTests",
