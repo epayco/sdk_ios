@@ -1,23 +1,15 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/17/21.
-//
-
 import Foundation
 import CommonCrypto
 
-struct AES {
+public struct AES {
 
     // MARK: - Value
     // MARK: Private
     private let key: Data
     private let iv: Data
 
-
-    // MARK: - Initialzier
-    init?(key: String, iv: String) {
+    // MARK: - Initializer
+    public init?(key: String, iv: String) {
         guard key.count == kCCKeySizeAES128 || key.count == kCCKeySizeAES256, let keyData = key.data(using: .utf8) else {
             debugPrint("Error: Failed to set a key.")
             return nil
@@ -28,24 +20,22 @@ struct AES {
             return nil
         }
 
-
         self.key = keyData
         self.iv  = ivData
     }
 
-
     // MARK: - Function
     // MARK: Public
-    func encrypt(string: String) -> Data? {
+    public func encrypt(string: String) -> Data? {
         return crypt(data: string.data(using: .utf8), option: CCOperation(kCCEncrypt))
     }
 
-    func decrypt(data: Data?) -> String? {
+    public func decrypt(data: Data?) -> String? {
         guard let decryptedData = crypt(data: data, option: CCOperation(kCCDecrypt)) else { return nil }
         return String(bytes: decryptedData, encoding: .utf8)
     }
 
-    func crypt(data: Data?, option: CCOperation) -> Data? {
+    public func crypt(data: Data?, option: CCOperation) -> Data? {
         guard let data = data else { return nil }
 
         let cryptLength = data.count + kCCBlockSizeAES128
@@ -60,7 +50,7 @@ struct AES {
             data.withUnsafeBytes { dataBytes in
                 iv.withUnsafeBytes { ivBytes in
                     key.withUnsafeBytes { keyBytes in
-                    CCCrypt(option, CCAlgorithm(kCCAlgorithmAES), options, keyBytes.baseAddress, keyLength, ivBytes.baseAddress, dataBytes.baseAddress, data.count, cryptBytes.baseAddress, cryptLength, &bytesLength)
+                        CCCrypt(option, CCAlgorithm(kCCAlgorithmAES), options, keyBytes.baseAddress, keyLength, ivBytes.baseAddress, dataBytes.baseAddress, data.count, cryptBytes.baseAddress, cryptLength, &bytesLength)
                     }
                 }
             }

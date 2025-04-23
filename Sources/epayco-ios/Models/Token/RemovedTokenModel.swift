@@ -1,22 +1,15 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/15/21.
-//
-
 import Foundation
 
-struct RemovedTokenModel: Codable {
-    let status: Bool
-    let message: String
-    let success: Bool?
-    let type: String?
-    let data: RemovedTokenDataModel
+public struct RemovedTokenModel: Codable {
+    public let status: Bool
+    public let message: String
+    public let success: Bool?
+    public let type: String?
+    public let data: RemovedTokenDataModel
 }
 
-struct RemovedTokenDataModel: Codable {
-    let status: String?
-    let description: String?
-    let errors: String?
+public struct RemovedTokenDataModel: Codable {
+    public let status: String?
+    public let description: String?
+    public let errors: String?
 }

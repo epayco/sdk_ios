@@ -1,40 +1,33 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/17/21.
-//
-
 import Foundation
 
-struct NewChargeSplitTransactionModel: Encodable {
-    let token_card: String
-    let customer_id: String
-    let doc_type: String
-    let doc_number: String
-    let name: String
-    let last_name: String
-    let email: String
-    let bill: String
-    let description: String
-    let value: String
-    let tax: String
-    let tax_base: String
-    let currency: String
-    let dues: String
-    let address: String
-    let phone: String
-    let cell_phone: String
-    let url_response: String
-    let url_confirmation: String
-    let ip: String
-    let splitpayment: String
-    let split_app_id: String
-    let split_merchant_id: String
-    let split_type: String
-    let split_rule: String
-    let split_primary_receiver: String
-    let split_primary_receiver_fee: String
-    let split_receivers: [SplitReceiverModel]
-    let extras: ExtrasModel?
+public struct NewChargeSplitTransactionModel: Encodable {
+    public let token_card: String
+    public let customer_id: String
+    public let doc_type: String
+    public let doc_number: String
+    public let name: String
+    public let last_name: String
+    public let email: String
+    public let bill: String
+    public let description: String
+    public let value: String
+    public let tax: String
+    public let tax_base: String
+    public let currency: String
+    public let dues: String
+    public let address: String
+    public let phone: String
+    public let cell_phone: String
+    public let url_response: String
+    public let url_confirmation: String
+    public let ip: String
+    public let splitpayment: String
+    public let split_app_id: String
+    public let split_merchant_id: String
+    public let split_type: String
+    public let split_rule: String
+    public let split_primary_receiver: String
+    public let split_primary_receiver_fee: String
+    public let split_receivers: [SplitReceiverModel]
+    public let extras: ExtrasModel?
 }
