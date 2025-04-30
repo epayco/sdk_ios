@@ -1,12 +1,5 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/15/21.
-//
-
 import Foundation
 
-struct UpdateCustomerModel: Encodable {
-    let name: String
+public struct UpdateCustomerModel: Encodable {
+   public let name: String
 }

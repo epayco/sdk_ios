@@ -1,13 +1,6 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/16/21.
-//
-
 import Foundation
 
-struct PaymentErrorModel: Codable {
-    let codError: String
-    let errorMessage: String
+public struct PaymentErrorModel: Codable {
+    public let codError: String
+    public let errorMessage: String
 }

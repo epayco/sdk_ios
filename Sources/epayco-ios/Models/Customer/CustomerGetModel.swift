@@ -1,38 +1,31 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/15/21.
-//
-
 import Foundation
 
-struct CustomerGetModel: Codable {
-    let status: Bool
-    let success: Bool?
-    let message: String?
-    let type: String?
-    let data: CustomerGetDataModel
+public struct CustomerGetModel: Codable {
+    public let status: Bool
+    public let success: Bool?
+    public let message: String?
+    public let type: String?
+    public let data: CustomerGetDataModel
 }
 
-struct CustomerGetDataModel: Codable {
-    let status: String?
-    let description: String?
-    let errors: String?
-    let id_customer: String?
-    let name: String?
-    let created: String?
-    let doc_type: String?
-    let doc_number: String?
-    let email: String?
-    let phone: String?
-    let address: String?
-    let cards: [CustomerCardModel]?
+public struct CustomerGetDataModel: Codable {
+    public let status: String?
+    public let description: String?
+    public let errors: String?
+    public let id_customer: String?
+    public let name: String?
+    public let created: String?
+    public let doc_type: String?
+    public let doc_number: String?
+    public let email: String?
+    public let phone: String?
+    public let address: String?
+    public let cards: [CustomerCardModel]?
 }
 
-struct CustomerCardModel: Codable {
-    let token: String
-    let franchise: String
-    let mask: String
-    let created: String
+public struct CustomerCardModel: Codable {
+    public let token: String
+    public let franchise: String
+    public let mask: String
+    public let created: String
 }

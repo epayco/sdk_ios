@@ -1,52 +1,44 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/5/21.
-//
-
 import Foundation
 
-struct SubscriptionModel: Codable {
-    let status: Bool
-    let message: String
-    let created: String?
-    let id: String?
-    let success: Bool?
-    let current_period_start: String?
-    let current_period_end: String?
-    let status_subscription: String?
-    let type: String?
-    let customer: SubscriptionCustomerModel?
-    let data: SubscriptionDataModel
+public struct SubscriptionModel: Codable {
+    public let status: Bool
+    public let message: String
+    public let created: String?
+    public let id: String?
+    public let success: Bool?
+    public let current_period_start: String?
+    public let current_period_end: String?
+    public let status_subscription: String?
+    public let type: String?
+    public let customer: SubscriptionCustomerModel?
+    public let data: SubscriptionDataModel
 }
 
-struct SubscriptionDataModel: Codable {
-    let status: String?
-    let description: String?
-    let errores: String?
-    let idClient: String?
-    let name: String?
-    let amount: Decimal?
-    let currency: String?
-    let interval: String?
-    let interval_count: Int?
-    let trial_days: Int?
-    let createdAt: String?
+public struct SubscriptionDataModel: Codable {
+    public let status: String?
+    public let description: String?
+    public let errores: String?
+    public let idClient: String?
+    public let name: String?
+    public let amount: Decimal?
+    public let currency: String?
+    public let interval: String?
+    public let interval_count: Int?
+    public let trial_days: Int?
+    public let createdAt: String?
 }
 
-struct SubscriptionCustomerModel: Codable {
-    let _id: String
-    let name: String
-    let email: String
-    let doc_number: String
-    let merchantId: String
-    let indicative: String?
-    let country: String?
-    let city: String
-    let address: String
-    let break_card: Bool
-    let doc_type: String
-    let updated_at: String
+public struct SubscriptionCustomerModel: Codable {
+    public let _id: String
+    public let name: String
+    public let email: String
+    public let doc_number: String
+    public let merchantId: String
+    public let indicative: String?
+    public let country: String?
+    public let city: String
+    public let address: String
+    public let break_card: Bool
+    public let doc_type: String
+    public let updated_at: String
 }
-

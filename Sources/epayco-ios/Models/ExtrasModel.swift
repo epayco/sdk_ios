@@ -1,21 +1,14 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/17/21.
-//
-
 import Foundation
 
-struct ExtrasModel: Encodable {
-    let extra1: String?
-    let extra2: String?
-    let extra3: String?
-    let extra4: String?
-    let extra5: String?
-    let extra6: String?
-    let extra7: String?
-    let extra8: String?
-    let extra9: String?
-    let extra10: String?
+public struct ExtrasModel: Encodable {
+    public let extra1: String?
+    public let extra2: String?
+    public let extra3: String?
+    public let extra4: String?
+    public let extra5: String?
+    public let extra6: String?
+    public let extra7: String?
+    public let extra8: String?
+    public let extra9: String?
+    public let extra10: String?
 }

@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct Auth: NetworkManagerDelegate {
-    var publicKey: String
-    var privateKey: String
+public struct Auth: NetworkManagerDelegate {
+    public var publicKey: String
+    public var privateKey: String
     
-    init(_ publicKey: String, _ privateKey: String){
+    public init(_ publicKey: String, _ privateKey: String){
         self.publicKey = publicKey
         self.privateKey = privateKey
     }
@@ -22,6 +22,6 @@ struct Auth: NetworkManagerDelegate {
         let credentials = AuthCredentialsModel(public_key: self.publicKey, private_key: self.privateKey)
         let authToken = networkManager.performRequest(httpMethod: "POST", requestBody: credentials, isAuthRequired: false)
 
-        return authToken;
+        return authToken
     }
 }
