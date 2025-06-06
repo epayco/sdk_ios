@@ -26,6 +26,7 @@ public struct NewBankTransactionSplitCallModel: Encodable {
     public let extra5: String?
     public let extra6: String?
     public let extra7: String?
+    public let extras_epayco: ExtrasModel?
     public let public_key: String?
     public let enpruebas: String?
     public let ip: String?
@@ -39,4 +40,5 @@ public struct NewBankTransactionSplitCallModel: Encodable {
     public let split_primary_receiver: String?
     public let split_primary_receiver_fee: String?
     public let split_receivers: String?
+    
 }

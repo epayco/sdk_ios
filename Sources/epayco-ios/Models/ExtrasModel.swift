@@ -11,4 +11,5 @@ public struct ExtrasModel: Encodable {
     public let extra8: String?
     public let extra9: String?
     public let extra10: String?
+    
 }

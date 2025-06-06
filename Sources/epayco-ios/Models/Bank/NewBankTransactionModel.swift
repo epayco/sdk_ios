@@ -27,4 +27,5 @@ public struct NewBankTransactionModel: Encodable {
     public let extra5: String
     public let extra6: String
     public let extra7: String
+    public let extras_epayco: ExtrasModel? 
 }

@@ -15,45 +15,52 @@ public struct Bank: NetworkManagerDelegate {
         self.aes128 = AES(key: privateKey, iv: iv)
     }
     
-    public func create(newBankTransactionData: NewBankTransactionModel) -> BankTransactionModel? {
-        let url = K.baseUrlSecure + "/restpagos/pagos/debitos.json"
-        let networkManager = NetworkManager<BankTransactionModel>(url, delegate: self)
-        let bankCreateData = NewBankTransactionCallModel(
-            banco: aes128?.encrypt(string: newBankTransactionData.bank)?.base64EncodedString(),
-            factura: aes128?.encrypt(string: newBankTransactionData.invoice)?.base64EncodedString(),
-            descripcion: aes128?.encrypt(string: newBankTransactionData.description)?.base64EncodedString(),
-            valor: aes128?.encrypt(string: newBankTransactionData.value)?.base64EncodedString(),
-            iva: aes128?.encrypt(string: newBankTransactionData.tax)?.base64EncodedString(),
-            baseiva: aes128?.encrypt(string: newBankTransactionData.taxBase)?.base64EncodedString(),
-            moneda: aes128?.encrypt(string: newBankTransactionData.currency)?.base64EncodedString(),
-            tipo_persona: aes128?.encrypt(string: newBankTransactionData.personType)?.base64EncodedString(),
-            tipo_doc: aes128?.encrypt(string: newBankTransactionData.docType)?.base64EncodedString(),
-            documento: aes128?.encrypt(string: newBankTransactionData.docNumber)?.base64EncodedString(),
-            nombres: aes128?.encrypt(string: newBankTransactionData.name)?.base64EncodedString(),
-            apellidos: aes128?.encrypt(string: newBankTransactionData.lastName)?.base64EncodedString(),
-            email: aes128?.encrypt(string: newBankTransactionData.email)?.base64EncodedString(),
-            pais: aes128?.encrypt(string: newBankTransactionData.country)?.base64EncodedString(),
-            celular: aes128?.encrypt(string: newBankTransactionData.cellPhone)?.base64EncodedString(),
-            url_respuesta: aes128?.encrypt(string: newBankTransactionData.responseUrl)?.base64EncodedString(),
-            url_confirmacion: aes128?.encrypt(string: newBankTransactionData.confirmationUrl)?.base64EncodedString(),
-            metodoconfirmacion: aes128?.encrypt(string: newBankTransactionData.confirmationMethod)?.base64EncodedString(),
-            extra1: aes128?.encrypt(string: newBankTransactionData.extra1)?.base64EncodedString(),
-            extra2: aes128?.encrypt(string: newBankTransactionData.extra2)?.base64EncodedString(),
-            extra3: aes128?.encrypt(string: newBankTransactionData.extra3)?.base64EncodedString(),
-            extra4: aes128?.encrypt(string: newBankTransactionData.extra4)?.base64EncodedString(),
-            extra5: aes128?.encrypt(string: newBankTransactionData.extra5)?.base64EncodedString(),
-            extra6: aes128?.encrypt(string: newBankTransactionData.extra6)?.base64EncodedString(),
-            extra7: aes128?.encrypt(string: newBankTransactionData.extra7)?.base64EncodedString(),
-            public_key: self.publicKey,
-            enpruebas: aes128?.encrypt(string: String(self.test))?.base64EncodedString(),
-            ip: aes128?.encrypt(string: newBankTransactionData.ip)?.base64EncodedString(),
-            lenguaje: "swift",
-            i: Data(self.iv.utf8).base64EncodedString()
-        )
-        let newTransaction = networkManager.performRequest(httpMethod: "POST", requestBody: bankCreateData)
+   public func create(newBankTransactionData: NewBankTransactionModel) -> BankTransactionModel? {
 
-        return newTransaction
-    }
+    let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel(
+        extra1: nil, extra2: nil, extra3: nil, extra4: nil, extra5: "P48",
+        extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
+    )
+
+    let url = K.baseUrlSecure + "/restpagos/pagos/debitos.json"
+    let networkManager = NetworkManager<BankTransactionModel>(url, delegate: self)
+    let bankCreateData = NewBankTransactionCallModel(
+        banco: aes128?.encrypt(string: newBankTransactionData.bank)?.base64EncodedString(),
+        factura: aes128?.encrypt(string: newBankTransactionData.invoice)?.base64EncodedString(),
+        descripcion: aes128?.encrypt(string: newBankTransactionData.description)?.base64EncodedString(),
+        valor: aes128?.encrypt(string: newBankTransactionData.value)?.base64EncodedString(),
+        iva: aes128?.encrypt(string: newBankTransactionData.tax)?.base64EncodedString(),
+        baseiva: aes128?.encrypt(string: newBankTransactionData.taxBase)?.base64EncodedString(),
+        moneda: aes128?.encrypt(string: newBankTransactionData.currency)?.base64EncodedString(),
+        tipo_persona: aes128?.encrypt(string: newBankTransactionData.personType)?.base64EncodedString(),
+        tipo_doc: aes128?.encrypt(string: newBankTransactionData.docType)?.base64EncodedString(),
+        documento: aes128?.encrypt(string: newBankTransactionData.docNumber)?.base64EncodedString(),
+        nombres: aes128?.encrypt(string: newBankTransactionData.name)?.base64EncodedString(),
+        apellidos: aes128?.encrypt(string: newBankTransactionData.lastName)?.base64EncodedString(),
+        email: aes128?.encrypt(string: newBankTransactionData.email)?.base64EncodedString(),
+        pais: aes128?.encrypt(string: newBankTransactionData.country)?.base64EncodedString(),
+        celular: aes128?.encrypt(string: newBankTransactionData.cellPhone)?.base64EncodedString(),
+        url_respuesta: aes128?.encrypt(string: newBankTransactionData.responseUrl)?.base64EncodedString(),
+        url_confirmacion: aes128?.encrypt(string: newBankTransactionData.confirmationUrl)?.base64EncodedString(),
+        metodoconfirmacion: aes128?.encrypt(string: newBankTransactionData.confirmationMethod)?.base64EncodedString(),
+        extra1: aes128?.encrypt(string: newBankTransactionData.extra1)?.base64EncodedString(),
+        extra2: aes128?.encrypt(string: newBankTransactionData.extra2)?.base64EncodedString(),
+        extra3: aes128?.encrypt(string: newBankTransactionData.extra3)?.base64EncodedString(),
+        extra4: aes128?.encrypt(string: newBankTransactionData.extra4)?.base64EncodedString(),
+        extra5: aes128?.encrypt(string: newBankTransactionData.extra5)?.base64EncodedString(),
+        extra6: aes128?.encrypt(string: newBankTransactionData.extra6)?.base64EncodedString(),
+        extra7: aes128?.encrypt(string: newBankTransactionData.extra7)?.base64EncodedString(),
+        extras_epayco: extrasEpayco,
+        public_key: self.publicKey,
+        enpruebas: aes128?.encrypt(string: String(self.test))?.base64EncodedString(),
+        ip: aes128?.encrypt(string: newBankTransactionData.ip)?.base64EncodedString(),
+        lenguaje: "swift",
+        i: Data(self.iv.utf8).base64EncodedString()
+    )
+    let newTransaction = networkManager.performRequest(httpMethod: "POST", requestBody: bankCreateData)
+
+    return newTransaction
+}
     
     public func create(newBankTransactionData: NewBankTransactionModel, splitData: SplitDataModel) -> BankTransactionModel? {
         let url = K.baseUrlSecure + "/restpagos/pagos/debitos.json"
@@ -84,6 +91,7 @@ public struct Bank: NetworkManagerDelegate {
             extra5: aes128?.encrypt(string: newBankTransactionData.extra5)?.base64EncodedString(),
             extra6: aes128?.encrypt(string: newBankTransactionData.extra6)?.base64EncodedString(),
             extra7: aes128?.encrypt(string: newBankTransactionData.extra7)?.base64EncodedString(),
+            extras_epayco: extrasEpayco,
             public_key: self.publicKey,
             enpruebas: aes128?.encrypt(string: String(self.test))?.base64EncodedString(),
             ip: aes128?.encrypt(string: newBankTransactionData.ip)?.base64EncodedString(),
