@@ -31,4 +31,5 @@ public struct NewBankTransactionCallModel: Encodable {
     public let ip: String?
     public let lenguaje: String?
     public let i: String?
+    public let extras_epayco: ExtrasModel?
 }

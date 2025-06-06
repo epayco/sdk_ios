@@ -19,4 +19,5 @@ public struct NewCashTransactionModel: Encodable {
     public let responseUrl: String
     public let confirmationUrl: String
     public let confirmationMethod: String
+    public let extras_epayco: ExtrasModel?
 }

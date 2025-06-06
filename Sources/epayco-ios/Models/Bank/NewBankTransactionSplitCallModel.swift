@@ -41,4 +41,5 @@ public struct NewBankTransactionSplitCallModel: Encodable {
     public let split_primary_receiver_fee: String?
     public let split_receivers: String?
     
+    
 }

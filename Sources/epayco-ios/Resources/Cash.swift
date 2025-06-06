@@ -19,6 +19,12 @@ public struct Cash: NetworkManagerDelegate {
     }
     
     public func create(paymentMethod: String, newCashTransactionData: NewCashTransactionModel) -> CashTransactionModel? {
+        
+        let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel(
+        extra1: nil, extra2: nil, extra3: nil, extra4: nil, extra5: "P48",
+        extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
+        )
+
         let url = K.baseUrlSecure + "/restpagos/v2/efectivo/" + paymentMethod
         let networkManager = NetworkManager<CashTransactionModel>(url, delegate: self)
         let cashCreateData = NewCashTransactionCallModel(
@@ -42,7 +48,8 @@ public struct Cash: NetworkManagerDelegate {
             public_key: self.publicKey,
             enpruebas: self.test,
             ip: newCashTransactionData.ip,
-            lenguaje: "swift"
+            lenguaje: "swift", 
+            extras_epayco: extrasEpayco
         )
         let newCashTransaction = networkManager.performRequest(httpMethod: "POST", requestBody: cashCreateData)
         
@@ -50,6 +57,12 @@ public struct Cash: NetworkManagerDelegate {
     }
     
     public func create(paymentMethod: String, newCashTransactionData: NewCashTransactionModel, splitData: SplitDataModel) -> CashTransactionModel? {
+        
+        let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel(
+            extra1: nil, extra2: nil, extra3: nil, extra4: nil, extra5: "P48",
+            extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
+        )
+
         let url = K.baseUrlSecure + "/restpagos/v2/efectivo/" + paymentMethod
         let networkManager = NetworkManager<CashTransactionModel>(url, delegate: self)
         let cashCreateData = NewCashTransactionSplitCallModel(
@@ -81,7 +94,8 @@ public struct Cash: NetworkManagerDelegate {
             split_rule: splitData.split_rule,
             split_primary_receiver: splitData.split_primary_receiver,
             split_primary_receiver_fee: splitData.split_primary_receiver_fee,
-            split_receivers: splitData.split_receivers
+            split_receivers: splitData.split_receivers,
+            extras_epayco: extrasEpayco
         )
         let newCashTransaction = networkManager.performRequest(httpMethod: "POST", requestBody: cashCreateData)
         

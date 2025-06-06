@@ -22,4 +22,5 @@ public struct NewChargeTransactionModel: Encodable {
     public let url_confirmation: String
     public let ip: String
     public let extras: ExtrasModel?
+    public let extras_epayco: ExtrasModel?
 }
