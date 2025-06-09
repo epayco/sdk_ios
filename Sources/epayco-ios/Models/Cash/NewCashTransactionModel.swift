@@ -14,6 +14,8 @@ public struct NewCashTransactionModel: Encodable {
     public let lastName: String
     public let email: String
     public let cellPhone: String
+    public let country: String
+    public let city: String
     public let endDate: String
     public let ip: String
     public let responseUrl: String

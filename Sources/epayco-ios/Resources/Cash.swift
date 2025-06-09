@@ -20,8 +20,8 @@ public struct Cash: NetworkManagerDelegate {
     
     public func create(paymentMethod: String, newCashTransactionData: NewCashTransactionModel) -> CashTransactionModel? {
         
-        let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel(
-        extra1: nil, extra2: nil, extra3: nil, extra4: nil, extra5: "P48",
+        let extrasEpayco = newCashTransactionData.extras_epayco ?? ExtrasModel(
+        extra1: nil, extra2: nil, extra3: nil, extra4: nil,
         extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
         )
 
@@ -48,18 +48,17 @@ public struct Cash: NetworkManagerDelegate {
             public_key: self.publicKey,
             enpruebas: self.test,
             ip: newCashTransactionData.ip,
-            lenguaje: "swift", 
+            lenguaje: "swift",
             extras_epayco: extrasEpayco
         )
         let newCashTransaction = networkManager.performRequest(httpMethod: "POST", requestBody: cashCreateData)
-        
         return newCashTransaction
     }
     
     public func create(paymentMethod: String, newCashTransactionData: NewCashTransactionModel, splitData: SplitDataModel) -> CashTransactionModel? {
         
-        let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel(
-            extra1: nil, extra2: nil, extra3: nil, extra4: nil, extra5: "P48",
+        let extrasEpayco = newCashTransactionData.extras_epayco ?? ExtrasModel(
+            extra1: nil, extra2: nil, extra3: nil, extra4: nil,
             extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
         )
 

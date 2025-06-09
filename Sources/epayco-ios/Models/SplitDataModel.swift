@@ -1,6 +1,7 @@
 import Foundation
 
 public struct SplitDataModel: Encodable {
+    public let ip: String
     public let splitpayment: String
     public let split_app_id: String
     public let split_merchant_id: String

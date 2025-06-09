@@ -20,7 +20,7 @@ public struct Charge: NetworkManagerDelegate {
    public func create(newChargeTransactionData: NewChargeTransactionModel) -> ChargeTransactionModel? {
     // Si el usuario no envía extras_epayco, lo agregamos automáticamente
     let extrasEpayco = newChargeTransactionData.extras_epayco ?? ExtrasModel(
-        extra1: nil, extra2: nil, extra3: nil, extra4: nil, extra5: "P48",
+        extra1: nil, extra2: nil, extra3: nil, extra4: nil,
         extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
     )
 
@@ -55,13 +55,13 @@ public struct Charge: NetworkManagerDelegate {
     let newTransaction = networkManager.performRequest(httpMethod: "POST", requestBody: dataWithExtras)
     return newTransaction
 }
-
+    
     public func create(newChargeTransactionData: NewChargeTransactionModel, splitData: SplitDataModel) -> ChargeTransactionModel? {
         
         let extrasEpayco = newChargeTransactionData.extras_epayco ?? ExtrasModel(
-    extra1: nil, extra2: nil, extra3: nil, extra4: nil, extra5: "P48",
-    extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
-    )
+            extra1: nil, extra2: nil, extra3: nil, extra4: nil,
+            extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
+        )
         let url = K.urlBase + "/payment/v1/charge/create"
         let networkManager = NetworkManager<ChargeTransactionModel>(url, delegate: self)
         let newChargeSplitTransactionData = NewChargeSplitTransactionModel(

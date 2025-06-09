@@ -53,8 +53,14 @@ public struct NetworkManager<ResponseModel: Decodable> {
             }
             
             if responseData != nil {
+                print("📥 responseData recibido: \(String(data: responseData ?? Data(), encoding: .utf8) ?? "No se pudo convertir a String")")
+
                 if let parsedData: ResponseModel? = self.parseJSON(responseData!) {
+                    print("✅ Datos parseados correctamente: \(String(describing: parsedData))")
+
                     response = parsedData
+                } else {
+                    print("❌ Error al parsear JSON a ResponseModel")
                 }
             }
 

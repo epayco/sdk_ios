@@ -7,7 +7,7 @@ public struct Bank: NetworkManagerDelegate {
     public var iv: String
     public var aes128: AES?
 
-    public init(_ publicKey: String, _ privateKey: String, _ test: Bool, iv: String){
+    public init(publicKey: String, privateKey: String, test: Bool, iv: String){
         self.publicKey = publicKey
         self.privateKey = privateKey
         self.test = test
@@ -18,8 +18,8 @@ public struct Bank: NetworkManagerDelegate {
    public func create(newBankTransactionData: NewBankTransactionModel) -> BankTransactionModel? {
 
     let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel(
-        extra1: nil, extra2: nil, extra3: nil, extra4: nil, extra5: "P48",
-        extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
+        extra1: "", extra2: "", extra3: "", extra4: "",
+        extra6: "", extra7: "", extra8: "", extra9: "", extra10: ""
     )
 
     let url = K.baseUrlSecure + "/restpagos/pagos/debitos.json"
@@ -33,7 +33,7 @@ public struct Bank: NetworkManagerDelegate {
         baseiva: aes128?.encrypt(string: newBankTransactionData.taxBase)?.base64EncodedString(),
         moneda: aes128?.encrypt(string: newBankTransactionData.currency)?.base64EncodedString(),
         tipo_persona: aes128?.encrypt(string: newBankTransactionData.personType)?.base64EncodedString(),
-        tipo_doc: aes128?.encrypt(string: newBankTransactionData.docType)?.base64EncodedString(),
+        tipo_doc:  aes128?.encrypt(string: newBankTransactionData.docType)?.base64EncodedString(),
         documento: aes128?.encrypt(string: newBankTransactionData.docNumber)?.base64EncodedString(),
         nombres: aes128?.encrypt(string: newBankTransactionData.name)?.base64EncodedString(),
         apellidos: aes128?.encrypt(string: newBankTransactionData.lastName)?.base64EncodedString(),
@@ -50,13 +50,12 @@ public struct Bank: NetworkManagerDelegate {
         extra5: aes128?.encrypt(string: newBankTransactionData.extra5)?.base64EncodedString(),
         extra6: aes128?.encrypt(string: newBankTransactionData.extra6)?.base64EncodedString(),
         extra7: aes128?.encrypt(string: newBankTransactionData.extra7)?.base64EncodedString(),
-        extras_epayco: extrasEpayco,
         public_key: self.publicKey,
         enpruebas: aes128?.encrypt(string: String(self.test))?.base64EncodedString(),
         ip: aes128?.encrypt(string: newBankTransactionData.ip)?.base64EncodedString(),
         lenguaje: "swift",
-        i: Data(self.iv.utf8).base64EncodedString()
-    )
+        i: Data(self.iv.utf8).base64EncodedString(),
+        extras_epayco: extrasEpayco)
     let newTransaction = networkManager.performRequest(httpMethod: "POST", requestBody: bankCreateData)
 
     return newTransaction
@@ -65,7 +64,7 @@ public struct Bank: NetworkManagerDelegate {
     public func create(newBankTransactionData: NewBankTransactionModel, splitData: SplitDataModel) -> BankTransactionModel? {
 
         let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel(
-        extra1: nil, extra2: nil, extra3: nil, extra4: nil, extra5: "P48",
+        extra1: nil, extra2: nil, extra3: nil, extra4: nil,
         extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
         )
 

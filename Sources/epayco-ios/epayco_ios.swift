@@ -16,7 +16,7 @@ public class Epayco {
         self.privateKey = privateKey
         self.lang = lang
         self.test = test
-        self.bank = Bank(publicKey, privateKey, test, iv: "0000000000000000")
+        self.bank = Bank(publicKey: publicKey, privateKey: privateKey, test: test, iv: "0000000000000000")
         self.cash = Cash(publicKey, privateKey, test)
         self.charge = Charge(publicKey, privateKey)
         self.customer = Customer(publicKey, privateKey)
