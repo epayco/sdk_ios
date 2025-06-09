@@ -1,4 +1,5 @@
 public class Epayco {
+
     public let publicKey: String
     public let privateKey: String
     public let lang: String
@@ -10,6 +11,7 @@ public class Epayco {
     public let plan: Plan
     public let subscription: Subscription
     public let token: Token
+
     
     public init(publicKey: String, privateKey: String, lang: String, test: Bool = false){
         self.publicKey = publicKey
