@@ -202,3 +202,4 @@ let epayco = Epayco(publicKey: "XXXXXXXXXX", privateKey: "XXXXXXXX", lang: "ES",
 let foundBanks = epayco.bank.getBanksList()
 let isBanksListValid = foundBanks != nil
 ```
+
