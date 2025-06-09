@@ -1,33 +1,26 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 3/26/21.
-//
-
 import Foundation
 
-struct TokenModel: Codable {
-    let status: Bool
-    let data: TokenDataModel
-    let message: String?
-    let id: String?
-    let success: Bool?
-    let card: TokenCardModel?
+public struct TokenModel: Codable {
+    public let status: Bool
+    public let data: TokenDataModel
+    public let message: String?
+    public let id: String?
+    public let success: Bool?
+    public let card: TokenCardModel?
 }
 
-struct TokenDataModel: Codable {
-    let status: String
-    let id: String?
-    let description: String?
-    let created: String?
-    let livemode: Bool?
-    let errors: String?
+public struct TokenDataModel: Codable {
+    public let status: String
+    public let id: String?
+    public let description: String?
+    public let created: String?
+    public let livemode: Bool?
+    public let errors: String?
 }
 
-struct TokenCardModel: Codable {
-    let exp_month: String
-    let exp_year: String
-    let name: String
-    let mask: String
+public struct TokenCardModel: Codable {
+    public let exp_month: String
+    public let exp_year: String
+    public let name: String
+    public let mask: String
 }

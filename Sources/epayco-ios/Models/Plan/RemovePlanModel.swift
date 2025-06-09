@@ -1,20 +1,13 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/16/21.
-//
-
 import Foundation
 
-struct RemovePlanModel: Codable {
-    let status: Bool
-    let message: String
-    let success: Bool
-    let type: String
-    let data: RemovePlanDataModel
+public struct RemovePlanModel: Codable {
+    public let status: Bool
+    public let message: String
+    public let success: Bool
+    public let type: String
+    public let data: RemovePlanDataModel
 }
 
-struct RemovePlanDataModel: Codable {
-    let idPlan: String
+public struct RemovePlanDataModel: Codable {
+    public let idPlan: String
 }

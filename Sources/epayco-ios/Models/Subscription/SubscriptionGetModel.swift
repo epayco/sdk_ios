@@ -1,42 +1,35 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/16/21.
-//
-
 import Foundation
 
-struct SubscriptionGetModel: Codable {
-    let status: Bool
-    let message: String?
-    let created: String?
-    let id: String?
-    let success: Bool?
-    let current_period_start: String?
-    let current_period_end: String?
-    let status_plan: String?
-    let type: String?
-    let customer: String?
-    let plan: SubscriptionGetPlanModel?
-    let data: SubscriptionGetDataModel?
+public struct SubscriptionGetModel: Codable {
+    public let status: Bool
+    public let message: String?
+    public let created: String?
+    public let id: String?
+    public let success: Bool?
+    public let current_period_start: String?
+    public let current_period_end: String?
+    public let status_plan: String?
+    public let type: String?
+    public let customer: String?
+    public let plan: SubscriptionGetPlanModel?
+    public let data: SubscriptionGetDataModel?
 }
 
-struct SubscriptionGetPlanModel: Codable {
-    let _id: String
-    let idClient: String
-    let name: String
-    let description: String
-    let amount: Decimal
-    let currency: String
-    let interval: String
-    let interval_count: Int
-    let status: String
-    let trialDays: Int
+public struct SubscriptionGetPlanModel: Codable {
+    public let _id: String
+    public let idClient: String
+    public let name: String
+    public let description: String
+    public let amount: Decimal
+    public let currency: String
+    public let interval: String
+    public let interval_count: Int
+    public let status: String
+    public let trialDays: Int
 }
 
-struct SubscriptionGetDataModel: Codable {
-    let status: String
-    let description: String
-    let errors: String
+public struct SubscriptionGetDataModel: Codable {
+    public let status: String
+    public let description: String
+    public let errors: String
 }

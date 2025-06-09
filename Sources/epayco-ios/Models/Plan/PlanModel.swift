@@ -1,31 +1,24 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/5/21.
-//
-
 import Foundation
 
-struct PlanModel: Codable {
-    let status: Bool
-    let success: Bool?
-    let message: String?
-    let type: String?
-    let data: PlanDataModel
+public struct PlanModel: Codable {
+    public let status: Bool
+    public let success: Bool?
+    public let message: String?
+    public let type: String?
+    public let data: PlanDataModel
 }
 
-struct PlanDataModel: Codable {
-    let status: String?
-    let id_plan: String?
-    let name: String?
-    let description: String
-    let amount: Decimal?
-    let currency: String?
-    let interval: String?
-    let interval_count: Int?
-    let trial_days: Int?
-    let test: Bool?
-    let afterPayment: Int?
-    let errors: String?
+public struct PlanDataModel: Codable {
+    public let status: String?
+    public let id_plan: String?
+    public let name: String?
+    public let description: String
+    public let amount: Decimal?
+    public let currency: String?
+    public let interval: String?
+    public let interval_count: Int?
+    public let trial_days: Int?
+    public let test: Bool?
+    public let afterPayment: Int?
+    public let errors: String?
 }

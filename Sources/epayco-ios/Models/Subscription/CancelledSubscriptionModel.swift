@@ -1,21 +1,14 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/16/21.
-//
-
 import Foundation
 
-struct CancelledSubscriptionModel: Codable {
-    let status: Bool
-    let message: String
-    let success: Bool?
-    let type: String?
-    let data: CancelledSubscriptionDataModel
+public struct CancelledSubscriptionModel: Codable {
+    public let status: Bool
+    public let message: String
+    public let success: Bool?
+    public let type: String?
+    public let data: CancelledSubscriptionDataModel
 }
 
-struct CancelledSubscriptionDataModel: Codable {
-    let status: String?
-    let description: String
+public struct CancelledSubscriptionDataModel: Codable {
+    public let status: String?
+    public let description: String
 }

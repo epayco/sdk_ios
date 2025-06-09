@@ -1,17 +1,10 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/5/21.
-//
-
 import Foundation
 
-struct Plan: NetworkManagerDelegate {
-    var publicKey: String
-    var privateKey: String
+public struct Plan: NetworkManagerDelegate {
+    public var publicKey: String
+    public var privateKey: String
     
-    init(_ publicKey: String, _ privateKey: String){
+    public init(_ publicKey: String, _ privateKey: String){
         self.publicKey = publicKey
         self.privateKey = privateKey
     }

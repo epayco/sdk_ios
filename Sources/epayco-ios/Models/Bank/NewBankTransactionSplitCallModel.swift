@@ -1,49 +1,45 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/17/21.
-//
-
 import Foundation
 
-struct NewBankTransactionSplitCallModel: Encodable {
-    let banco: String?
-    let factura: String?
-    let descripcion: String?
-    let valor: String?
-    let iva: String?
-    let baseiva: String?
-    let moneda: String?
-    let tipo_persona: String?
-    let tipo_doc: String?
-    let documento: String?
-    let nombres: String?
-    let apellidos: String?
-    let email: String?
-    let pais: String?
-    let celular: String?
-    let url_respuesta: String?
-    let url_confirmacion: String?
-    let metodoconfirmacion: String?
-    let extra1: String?
-    let extra2: String?
-    let extra3: String?
-    let extra4: String?
-    let extra5: String?
-    let extra6: String?
-    let extra7: String?
-    let public_key: String?
-    let enpruebas: String?
-    let ip: String?
-    let lenguaje: String?
-    let i: String?
-    let splitpayment: String?
-    let split_app_id: String?
-    let split_merchant_id: String?
-    let split_type: String?
-    let split_rule: String?
-    let split_primary_receiver: String?
-    let split_primary_receiver_fee: String?
-    let split_receivers: String?
+public struct NewBankTransactionSplitCallModel: Encodable {
+    public let banco: String?
+    public let factura: String?
+    public let descripcion: String?
+    public let valor: String?
+    public let iva: String?
+    public let baseiva: String?
+    public let moneda: String?
+    public let tipo_persona: String?
+    public let tipo_doc: String?
+    public let documento: String?
+    public let nombres: String?
+    public let apellidos: String?
+    public let email: String?
+    public let pais: String?
+    public let celular: String?
+    public let url_respuesta: String?
+    public let url_confirmacion: String?
+    public let metodoconfirmacion: String?
+    public let extra1: String?
+    public let extra2: String?
+    public let extra3: String?
+    public let extra4: String?
+    public let extra5: String?
+    public let extra6: String?
+    public let extra7: String?
+    public let extras_epayco: ExtrasModel?
+    public let public_key: String?
+    public let enpruebas: String?
+    public let ip: String?
+    public let lenguaje: String?
+    public let i: String?
+    public let splitpayment: String?
+    public let split_app_id: String?
+    public let split_merchant_id: String?
+    public let split_type: String?
+    public let split_rule: String?
+    public let split_primary_receiver: String?
+    public let split_primary_receiver_fee: String?
+    public let split_receivers: String?
+    
+    
 }

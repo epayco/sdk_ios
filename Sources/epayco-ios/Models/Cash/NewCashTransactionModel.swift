@@ -1,29 +1,25 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/5/21.
-//
-
 import Foundation
 
-struct NewCashTransactionModel: Encodable {
-    let invoice: String
-    let description: String
-    let value: String
-    let tax: String
-    let taxBase: String
-    let currency: String
-    let personType: String
-    let docType: String
-    let docNumber: String
-    let name: String
-    let lastName: String
-    let email: String
-    let cellPhone: String
-    let endDate: String
-    let ip: String
-    let responseUrl: String
-    let confirmationUrl: String
-    let confirmationMethod: String
+public struct NewCashTransactionModel: Encodable {
+    public let invoice: String
+    public let description: String
+    public let value: String
+    public let tax: String
+    public let taxBase: String
+    public let currency: String
+    public let personType: String
+    public let docType: String
+    public let docNumber: String
+    public let name: String
+    public let lastName: String
+    public let email: String
+    public let cellPhone: String
+    public let country: String
+    public let city: String
+    public let endDate: String
+    public let ip: String
+    public let responseUrl: String
+    public let confirmationUrl: String
+    public let confirmationMethod: String
+    public let extras_epayco: ExtrasModel?
 }

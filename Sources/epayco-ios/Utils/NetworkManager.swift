@@ -1,30 +1,22 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/12/21.
-//
-
 import Foundation
 
-
-protocol NetworkManagerDelegate {
+public protocol NetworkManagerDelegate {
     var publicKey: String {get set}
     var privateKey: String {get set}
 }
 
-struct NetworkManager<ResponseModel: Decodable> {
-    let url: String
-    let delegate: NetworkManagerDelegate
+public struct NetworkManager<ResponseModel: Decodable> {
+    public let url: String
+    public let delegate: NetworkManagerDelegate
     
-    init(_ url: String, delegate: NetworkManagerDelegate){
+    public init(_ url: String, delegate: NetworkManagerDelegate){
         self.url = url
         self.delegate = delegate
     }
     
-    func performRequest<T: Encodable>(httpMethod: String, requestBody: T?, isAuthRequired: Bool = true) -> ResponseModel? {
+    public func performRequest<T: Encodable>(httpMethod: String, requestBody: T?, isAuthRequired: Bool = true) -> ResponseModel? {
         if let url = URL(string: self.url) {
-            let semaphore = DispatchSemaphore(value: 0);
+            let semaphore = DispatchSemaphore(value: 0)
             let session = URLSession(configuration: .default)
             var request = URLRequest(url: url)
             let requestType = self.url.contains(K.urlBase) ? "sdk-jwt" : "sdk"
@@ -37,7 +29,6 @@ struct NetworkManager<ResponseModel: Decodable> {
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             request.setValue(requestType, forHTTPHeaderField: "type")
             request.setValue("swift", forHTTPHeaderField: "lang")
-            
             
             if isAuthRequired {
                 let authToken = self.url.contains(K.urlBase) ? "Bearer " + authenticate() : "Basic " +  Data(delegate.publicKey.utf8).base64EncodedString()
@@ -62,8 +53,14 @@ struct NetworkManager<ResponseModel: Decodable> {
             }
             
             if responseData != nil {
+                print("📥 responseData recibido: \(String(data: responseData ?? Data(), encoding: .utf8) ?? "No se pudo convertir a String")")
+
                 if let parsedData: ResponseModel? = self.parseJSON(responseData!) {
+                    print("✅ Datos parseados correctamente: \(String(describing: parsedData))")
+
                     response = parsedData
+                } else {
+                    print("❌ Error al parsear JSON a ResponseModel")
                 }
             }
 

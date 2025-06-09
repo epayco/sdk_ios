@@ -1,19 +1,12 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/5/21.
-//
-
 import Foundation
 
-struct NewPlanModel: Encodable {
-    let id_plan: String
-    let name: String
-    let description: String
-    let amount: Decimal
-    let currency: String
-    let interval: String
-    let interval_count: Int
-    let trial_days: Int
+public struct NewPlanModel: Encodable {
+    public let id_plan: String
+    public let name: String
+    public let description: String
+    public let amount: Decimal
+    public let currency: String
+    public let interval: String
+    public let interval_count: Int
+    public let trial_days: Int
 }

@@ -1,22 +1,24 @@
 public class Epayco {
-    let publicKey: String
-    let privateKey: String
-    let lang: String
-    let test: Bool
-    let bank: Bank
-    let cash: Cash
-    let charge: Charge
-    let customer: Customer
-    let plan: Plan
-    let subscription: Subscription
-    let token: Token
+
+    public let publicKey: String
+    public let privateKey: String
+    public let lang: String
+    public let test: Bool
+    public let bank: Bank
+    public let cash: Cash
+    public let charge: Charge
+    public let customer: Customer
+    public let plan: Plan
+    public let subscription: Subscription
+    public let token: Token
+
     
-    init(publicKey: String, privateKey: String, lang: String, test: Bool = false){
+    public init(publicKey: String, privateKey: String, lang: String, test: Bool = false){
         self.publicKey = publicKey
         self.privateKey = privateKey
         self.lang = lang
         self.test = test
-        self.bank = Bank(publicKey, privateKey, test, iv: "0000000000000000")
+        self.bank = Bank(publicKey: publicKey, privateKey: privateKey, test: test, iv: "0000000000000000")
         self.cash = Cash(publicKey, privateKey, test)
         self.charge = Charge(publicKey, privateKey)
         self.customer = Customer(publicKey, privateKey)
@@ -25,4 +27,3 @@ public class Epayco {
         self.token = Token(publicKey, privateKey)
     }
 }
-

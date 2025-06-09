@@ -1,18 +1,11 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/5/21.
-//
-
 import Foundation
 
-struct NewSubscriptionModel: Encodable {
-    let id_plan: String
-    let customer: String
-    let token_card: String
-    let doc_type: String
-    let doc_number: String
-    let url_confirmation: String?
-    let method_confirmation: String?
+public struct NewSubscriptionModel: Encodable {
+    public let id_plan: String
+    public let customer: String
+    public let token_card: String
+    public let doc_type: String
+    public let doc_number: String
+    public let url_confirmation: String?
+    public let method_confirmation: String?
 }

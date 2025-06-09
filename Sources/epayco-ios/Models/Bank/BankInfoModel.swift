@@ -1,21 +1,14 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/5/21.
-//
-
 import Foundation
 
-struct BankInfoModel: Codable {
-    let success: Bool
-    let title_response: String
-    let text_response: String
-    let last_action: String
-    let data: [BankInfoDataModel]
+public struct BankInfoModel: Codable {
+    public let success: Bool
+    public let title_response: String
+    public let text_response: String
+    public let last_action: String
+    public let data: [BankInfoDataModel]
 }
 
-struct BankInfoDataModel: Codable {
-    let bankCode: String
-    let bankName: String
+public struct BankInfoDataModel: Codable {
+    public let bankCode: String
+    public let bankName: String
 }

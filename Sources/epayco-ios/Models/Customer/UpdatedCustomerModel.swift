@@ -1,24 +1,17 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/15/21.
-//
-
 import Foundation
 
-struct UpdatedCustomerModel: Codable {
-    let status: Bool
-    let message: String?
-    let success: Bool?
-    let type: String?
-    let data: UpdatedCustomerDataModel
+public struct UpdatedCustomerModel: Codable {
+    public let status: Bool
+    public let message: String?
+    public let success: Bool?
+    public let type: String?
+    public let data: UpdatedCustomerDataModel
 }
 
-struct UpdatedCustomerDataModel: Codable {
-    let status: String
-    let description: String
-    let customerId: String?
-    let name: String?
-    let email: String?
+public struct UpdatedCustomerDataModel: Codable {
+    public let status: String
+    public let description: String
+    public let customerId: String?
+    public let name: String?
+    public let email: String?
 }

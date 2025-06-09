@@ -1,19 +1,12 @@
-//
-//  File.swift
-//  
-//
-//  Created by Roberto Meran on 4/12/21.
-//
-
 import Foundation
 
-struct NewTokenModel: Encodable {
-    let card: CardTokenModel
+public struct NewTokenModel: Encodable {
+    public let card: CardTokenModel
 }
 
-struct CardTokenModel: Encodable {
-    let number: String
-    let exp_year: String
-    let exp_month: String
-    let cvc: String
+public struct CardTokenModel: Encodable {
+    public let number: String
+    public let exp_year: String
+    public let exp_month: String
+    public let cvc: String
 }
