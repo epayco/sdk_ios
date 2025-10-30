@@ -43,10 +43,9 @@ public struct Subscription: NetworkManagerDelegate {
 
     public func charge(subscriptionChargeData: SubscriptionChargeModel) -> ChargedSubscriptionModel? {
         let url = K.urlBase + "/payment/v1/charge/subscription/create"
-        var chargeData = subscriptionChargeData
-        // El campo 'extras' ya se envía por defecto como 'P48' en el modelo
         let networkManager = NetworkManager<ChargedSubscriptionModel>(url, delegate: self)
-        let subscriptionCharge = networkManager.performRequest(httpMethod: "POST", requestBody: chargeData)
+        let subscriptionCharge = networkManager.performRequest(httpMethod: "POST", requestBody: subscriptionChargeData)
+        
         return subscriptionCharge
     }
 }
