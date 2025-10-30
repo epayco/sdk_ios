@@ -53,6 +53,20 @@ public struct Bank: NetworkManagerDelegate {
         lenguaje: "swift",
         i: Data(self.iv.utf8).base64EncodedString(),
         extras_epayco: extrasEpayco)
+
+    // Depuración: imprimir el JSON que se envía
+    do {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        let jsonData = try encoder.encode(bankCreateData)
+        if let jsonString = String(data: jsonData, encoding: .utf8) {
+            print("\n📤 JSON enviado a PSE:")
+            print(jsonString)
+        }
+    } catch {
+        print("Error serializando bankCreateData: \(error)")
+    }
+
     let newTransaction = networkManager.performRequest(httpMethod: "POST", requestBody: bankCreateData)
 
     return newTransaction
