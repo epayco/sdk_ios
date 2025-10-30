@@ -10,8 +10,9 @@ public struct SubscriptionChargeModel: Encodable {
     public let address: String
     public let phone: String
     public let cell_phone: String
-    
-    public init(id_plan: String, customer: String, token_card: String, doc_type: String, doc_number: String, ip: String, address: String, phone: String, cell_phone: String) {
+    public let extras_epayco: ExtrasModel?
+
+    public init(id_plan: String, customer: String, token_card: String, doc_type: String, doc_number: String, ip: String, address: String, phone: String, cell_phone: String, extras_epayco: ExtrasModel? = ExtrasModel(extra5: "P48")) {
         self.id_plan = id_plan
         self.customer = customer
         self.token_card = token_card
@@ -21,5 +22,6 @@ public struct SubscriptionChargeModel: Encodable {
         self.address = address
         self.phone = phone
         self.cell_phone = cell_phone
+        self.extras_epayco = extras_epayco
     }
 }
