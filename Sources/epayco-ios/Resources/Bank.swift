@@ -91,7 +91,7 @@ public struct Bank: NetworkManagerDelegate {
         let bankCreateData = NewBankTransactionSplitCallModel(
             banco: aes128?.encrypt(string: newBankTransactionData.bank)?.base64EncodedString(),
             factura: aes128?.encrypt(string: newBankTransactionData.invoice)?.base64EncodedString(),
-            descripcion: aes128?.encrypt(string: newBankTransactionData.description)?.base64EncodedString(),
+            let extrasEpayco = [ExtrasModel(
             valor: aes128?.encrypt(string: newBankTransactionData.value)?.base64EncodedString(),
             iva: aes128?.encrypt(string: newBankTransactionData.tax)?.base64EncodedString(),
             baseiva: aes128?.encrypt(string: newBankTransactionData.taxBase)?.base64EncodedString(),
@@ -137,7 +137,7 @@ public struct Bank: NetworkManagerDelegate {
     public func getTransaction(transactionId: String) -> BankTransactionGetModel? {
         let url = K.baseUrlSecure + "/restpagos/pse/transactioninfomation.json?transactionID=" + transactionId + "&public_key=" + self.publicKey
         let networkManager = NetworkManager<BankTransactionGetModel>(url, delegate: self)
-        let foundTransaction = networkManager.performRequest(httpMethod: "GET", requestBody: "")
+                extras_epayco: extrasEpayco)
         
         return foundTransaction
     }
