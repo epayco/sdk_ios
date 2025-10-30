@@ -32,4 +32,38 @@ public struct NewBankTransactionCallModel: Encodable {
     public let lenguaje: String?
     public let i: String?
     public let extras_epayco: ExtrasModel?
+    
+    public init(banco: String?, factura: String?, descripcion: String?, valor: String?, iva: String?, baseiva: String?, moneda: String?, tipo_persona: String?, tipo_doc: String?, documento: String?, nombres: String?, apellidos: String?, email: String?, pais: String?, celular: String?, url_respuesta: String?, url_confirmacion: String?, metodoconfirmacion: String?, extra1: String?, extra2: String?, extra3: String?, extra4: String?, extra5: String?, extra6: String?, extra7: String?, public_key: String?, enpruebas: String?, ip: String?, lenguaje: String?, i: String?, extras_epayco: ExtrasModel? = nil) {
+        self.banco = banco
+        self.factura = factura
+        self.descripcion = descripcion
+        self.valor = valor
+        self.iva = iva
+        self.baseiva = baseiva
+        self.moneda = moneda
+        self.tipo_persona = tipo_persona
+        self.tipo_doc = tipo_doc
+        self.documento = documento
+        self.nombres = nombres
+        self.apellidos = apellidos
+        self.email = email
+        self.pais = pais
+        self.celular = celular
+        self.url_respuesta = url_respuesta
+        self.url_confirmacion = url_confirmacion
+        self.metodoconfirmacion = metodoconfirmacion
+        self.extra1 = extra1
+        self.extra2 = extra2
+        self.extra3 = extra3
+        self.extra4 = extra4
+        self.extra5 = extra5
+        self.extra6 = extra6
+        self.extra7 = extra7
+        self.public_key = public_key
+        self.enpruebas = enpruebas
+        self.ip = ip
+        self.lenguaje = lenguaje
+        self.i = i
+        self.extras_epayco = extras_epayco
+    }
 }

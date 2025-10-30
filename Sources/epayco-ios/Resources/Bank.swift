@@ -17,9 +17,21 @@ public struct Bank: NetworkManagerDelegate {
     
    public func create(newBankTransactionData: NewBankTransactionModel) -> BankTransactionModel? {
 
-    let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel(
-        extra1: "", extra2: "", extra3: "", extra4: "",
-        extra6: "", extra7: "", extra8: "", extra9: "", extra10: ""
+
+    // Encriptar extra5 para extras_epayco
+    // Siempre encriptar el string 'P48' para extra5
+    let encryptedExtra5: String = aes128?.encrypt(string: "P48")?.base64EncodedString() ?? ""
+    let extrasEpayco = ExtrasModel(
+        extra1: nil,
+        extra2: nil,
+        extra3: nil,
+        extra4: nil,
+        extra5: encryptedExtra5,
+        extra6: nil,
+        extra7: nil,
+        extra8: nil,
+        extra9: nil,
+        extra10: nil
     )
 
     let url = K.baseUrlSecure + "/restpagos/pagos/debitos.json"
@@ -56,6 +68,16 @@ public struct Bank: NetworkManagerDelegate {
         lenguaje: "swift",
         i: Data(self.iv.utf8).base64EncodedString(),
         extras_epayco: extrasEpayco)
+
+
+    // Imprimir el JSON antes de enviar la solicitud para depuración
+    if let jsonData = try? JSONEncoder().encode(bankCreateData),
+       let jsonString = String(data: jsonData, encoding: .utf8) {
+        print("\n📤 JSON enviado a la API REST:\n", jsonString)
+    } else {
+        print("\n⚠️ Error al serializar bankCreateData a JSON")
+    }
+
     let newTransaction = networkManager.performRequest(httpMethod: "POST", requestBody: bankCreateData)
 
     return newTransaction
@@ -63,10 +85,7 @@ public struct Bank: NetworkManagerDelegate {
     
     public func create(newBankTransactionData: NewBankTransactionModel, splitData: SplitDataModel) -> BankTransactionModel? {
 
-        let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel(
-        extra1: nil, extra2: nil, extra3: nil, extra4: nil,
-        extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
-        )
+        let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel()
 
         let url = K.baseUrlSecure + "/restpagos/pagos/debitos.json"
         let networkManager = NetworkManager<BankTransactionModel>(url, delegate: self)
