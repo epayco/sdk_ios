@@ -19,13 +19,8 @@ public struct Bank: NetworkManagerDelegate {
 
 
     // Encriptar extra5 para extras_epayco
-    let encryptedExtra5: String = {
-        if let customExtras = newBankTransactionData.extras_epayco?.extra5 {
-            return aes128?.encrypt(string: customExtras)?.base64EncodedString() ?? ""
-        } else {
-            return aes128?.encrypt(string: "P48")?.base64EncodedString() ?? ""
-        }
-    }()
+    // Siempre encriptar el string 'P48' para extra5
+    let encryptedExtra5: String = aes128?.encrypt(string: "P48")?.base64EncodedString() ?? ""
     let extrasEpayco = ExtrasModel(
         extra1: nil,
         extra2: nil,
