@@ -17,10 +17,7 @@ public struct Bank: NetworkManagerDelegate {
     
    public func create(newBankTransactionData: NewBankTransactionModel) -> BankTransactionModel? {
 
-    let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel(
-        extra1: "", extra2: "", extra3: "", extra4: "",
-        extra6: "", extra7: "", extra8: "", extra9: "", extra10: ""
-    )
+    let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel()
 
     let url = K.baseUrlSecure + "/restpagos/pagos/debitos.json"
     let networkManager = NetworkManager<BankTransactionModel>(url, delegate: self)
@@ -63,10 +60,7 @@ public struct Bank: NetworkManagerDelegate {
     
     public func create(newBankTransactionData: NewBankTransactionModel, splitData: SplitDataModel) -> BankTransactionModel? {
 
-        let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel(
-        extra1: nil, extra2: nil, extra3: nil, extra4: nil,
-        extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
-        )
+        let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel()
 
         let url = K.baseUrlSecure + "/restpagos/pagos/debitos.json"
         let networkManager = NetworkManager<BankTransactionModel>(url, delegate: self)
