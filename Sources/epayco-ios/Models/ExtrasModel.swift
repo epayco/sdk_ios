@@ -5,7 +5,7 @@ public struct ExtrasModel: Encodable {
     public let extra2: String?
     public let extra3: String?
     public let extra4: String?
-    public let extra5: String = "P48" /// Product tagged by default
+    public let extra5: String /// Product tagged by default
     public let extra6: String?
     public let extra7: String?
     public let extra8: String?
@@ -17,6 +17,7 @@ public struct ExtrasModel: Encodable {
         self.extra2 = extra2
         self.extra3 = extra3
         self.extra4 = extra4
+        self.extra5 = "P48"
         self.extra6 = extra6
         self.extra7 = extra7
         self.extra8 = extra8
