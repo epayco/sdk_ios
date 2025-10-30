@@ -18,14 +18,20 @@ public struct Bank: NetworkManagerDelegate {
    public func create(newBankTransactionData: NewBankTransactionModel) -> BankTransactionModel? {
 
 
-    // Encriptar P48 para extra5
-    let encryptedP48 = aes128?.encrypt(string: "P48")?.base64EncodedString()
+    // Encriptar extra5 para extras_epayco
+    let encryptedExtra5: String = {
+        if let customExtras = newBankTransactionData.extras_epayco?.extra5 {
+            return aes128?.encrypt(string: customExtras)?.base64EncodedString() ?? ""
+        } else {
+            return aes128?.encrypt(string: "P48")?.base64EncodedString() ?? ""
+        }
+    }()
     let extrasEpayco = ExtrasModel(
         extra1: nil,
         extra2: nil,
         extra3: nil,
         extra4: nil,
-        extra5: encryptedP48 ?? "",
+        extra5: encryptedExtra5,
         extra6: nil,
         extra7: nil,
         extra8: nil,
