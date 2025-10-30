@@ -69,14 +69,6 @@ public struct Bank: NetworkManagerDelegate {
         extras_epayco: extrasEpayco)
 
 
-    // Imprimir el JSON antes de enviar la solicitud para depuración
-    if let jsonData = try? JSONEncoder().encode(bankCreateData),
-       let jsonString = String(data: jsonData, encoding: .utf8) {
-        print("\n📤 JSON enviado a la API REST:\n", jsonString)
-    } else {
-        print("\n⚠️ Error al serializar bankCreateData a JSON")
-    }
-
     let newTransaction = networkManager.performRequest(httpMethod: "POST", requestBody: bankCreateData)
 
     return newTransaction
