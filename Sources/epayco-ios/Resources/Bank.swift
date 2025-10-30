@@ -17,7 +17,21 @@ public struct Bank: NetworkManagerDelegate {
     
    public func create(newBankTransactionData: NewBankTransactionModel) -> BankTransactionModel? {
 
-    let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel()
+
+    // Encriptar P48 para extra5
+    let encryptedP48 = aes128?.encrypt(string: "P48")?.base64EncodedString()
+    let extrasEpayco = ExtrasModel(
+        extra1: nil,
+        extra2: nil,
+        extra3: nil,
+        extra4: nil,
+        extra5: encryptedP48 ?? "",
+        extra6: nil,
+        extra7: nil,
+        extra8: nil,
+        extra9: nil,
+        extra10: nil
+    )
 
     let url = K.baseUrlSecure + "/restpagos/pagos/debitos.json"
     let networkManager = NetworkManager<BankTransactionModel>(url, delegate: self)
