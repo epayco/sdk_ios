@@ -30,4 +30,5 @@ public struct NewCashTransactionSplitCallModel: Encodable {
     public let split_primary_receiver: String
     public let split_primary_receiver_fee: String
     public let split_receivers: [SplitReceiverModel]
+    public let extras_epayco: ExtrasModel?
 }

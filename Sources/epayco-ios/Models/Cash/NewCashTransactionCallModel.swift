@@ -22,4 +22,5 @@ public struct NewCashTransactionCallModel: Encodable {
     public let enpruebas: Bool
     public let ip: String
     public let lenguaje: String
+    public let extras_epayco: ExtrasModel?
 }

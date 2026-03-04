@@ -13,16 +13,14 @@ public struct Token: NetworkManagerDelegate {
         let url = K.urlBase + "/v1/tokens"
         let networkManager = NetworkManager<TokenModel>(url, delegate: self)
         let newToken = networkManager.performRequest(httpMethod: "POST", requestBody: newTokenData)
-        
-        return newToken;
+        return newToken
     }
-    
+
     public func remove(customerId: String, franchise: String, mask: String) -> RemovedTokenModel? {
         let url = K.urlBase + "/v1/remove/token"
         let networkManager = NetworkManager<RemovedTokenModel>(url, delegate: self)
         let removeTokenData = RemoveTokenModel(franchise: franchise, mask: mask, customer_id: customerId)
         let removeTokenResult = networkManager.performRequest(httpMethod: "POST", requestBody: removeTokenData)
-        
         return removeTokenResult
     }
 }
