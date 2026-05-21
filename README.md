@@ -8,51 +8,149 @@ Epayco-ios dispone de este SDK con el fin que se pueda manejar la información s
 Se emplea Swift Package Manager.  
 En Xcode, selecciona `File > Swift Packages > Add Package Dependency`.
 
-## Uso
+## ✨ Novedades - Sistema de Manejo de Errores Mejorado
 
-### Creación de token
+El SDK ahora incluye un sistema robusto de manejo de errores similar al utilizado en PHP:
+
+### Cambios Principales:
+- ✅ **Error Mapping**: Mapeo automático de códigos HTTP a mensajes descriptivos
+- ✅ **Información Detallada**: Acceso a mensajes de error del API y datos adicionales
+- ✅ **Result Type**: Uso de `Result<Model, ErrorResponse>` en lugar de optionals
+- ✅ **Mejor Debugging**: Logs mejorados con información completa
+
+### Archivos Nuevos:
+- `Models/ErrorResponseModel.swift` - Modelo unificado de errores
+- `Utils/ErrorMapper.swift` - Mapeo de status codes y extracción de mensajes
+- `Resources/ChargeExampleUsage.swift` - Ejemplos de uso actualizado
+
+## Uso - Versión Mejorada
+
+### Creación de transacción de pago (con manejo de errores)
+```swift
+let epayco = Epayco(publicKey: "XXXXXXXXXX", privateKey: "XXXXXXXX", lang: "ES", test: false)
+let chargeData = NewChargeTransactionModel(
+    token_card: "070d69316b",
+    customer_id: "5f8a4x",
+    doc_type: "CC",
+    doc_number: "12345678",
+    name: "Juan",
+    last_name: "Pérez",
+    email: "juan@example.com",
+    bill: "FACTURA001",
+    description: "Compra de producto",
+    value: "50000",
+    tax: "0",
+    tax_base: "50000",
+    currency: "COP",
+    dues: "1",
+    address: "Calle 123",
+    phone: "3001234567",
+    cell_phone: "3001234567",
+    url_response: "https://tuapp.com/response",
+    url_confirmation: "https://tuapp.com/confirm",
+    ip: "192.168.1.1"
+)
+
+// ✅ NUEVA FORMA: Usar Result
+let result = epayco.charge.create(newChargeTransactionData: chargeData)
+
+switch result {
+case .success(let transaction):
+    print("✅ Transacción exitosa")
+    print("Ref: \(transaction.data.ref_payco ?? 0)")
+    print("Estado: \(transaction.data.estado ?? "")")
+    print("Autorización: \(transaction.data.autorizacion ?? "")")
+    
+case .failure(let error):
+    print("❌ Error: \(error.message)")
+    print("Código HTTP: \(error.status_code)")
+    if let data = error.data {
+        print("Detalles: \(data)")
+    }
+}
+```
+
+### Crear token
 ```swift
 let epayco = Epayco(publicKey: "XXXXXXXXXX", privateKey: "XXXXXXXX", lang: "ES", test: false)
 let newTokenCard = CardTokenModel(number: "4222222222222225", exp_year: "2030", exp_month: "06", cvc: "021")
 let newTokenData = NewTokenModel(card: newTokenCard)
-let newToken = epayco.token.create(newTokenData: newTokenData)
-let isTokenValid = newToken != nil 
+
+let result = epayco.token.create(newTokenData: newTokenData)
+
+switch result {
+case .success(let token):
+    print("✅ Token creado: \(token.id)")
+case .failure(let error):
+    print("❌ Error: \(error.message)")
+}
 ```
 
 ### Eliminar token
 ```swift
 let epayco = Epayco(publicKey: "XXXXXXXXXX", privateKey: "XXXXXXXX", lang: "ES", test: false)
-let removeTokenResult = epayco.token.remove(customerId: "kXyobRkeyBkJPTd57", franchise: "visa", mask: "422222******2225")
-let isTokenRemoved = removeTokenResult != nil
+let result = epayco.token.remove(customerId: "kXyobRkeyBkJPTd57", franchise: "visa", mask: "422222******2225")
+
+switch result {
+case .success(let removed):
+    print("✅ Token eliminado")
+case .failure(let error):
+    print("❌ Error: \(error.message)")
+}
 ```
 
 ### Crear cliente
 ```swift
 let epayco = Epayco(publicKey: "XXXXXXXXXX", privateKey: "XXXXXXXX", lang: "ES", test: false)
 let newCustomerData = NewCustomerModel(token_card:"079d69316b", name: "hello", last_name: "world", email: "prueba@correo.co", isDefault: false, city: "Miami", address: "Av...", phone: "555555", cell_phone: "55555")
-let newCustomer = epayco.customer.create(newCustomerData: newCustomerData)
-let isCustomerValid = newCustomer != nil
+
+let result = epayco.customer.create(newCustomerData: newCustomerData)
+
+switch result {
+case .success(let customer):
+    print("✅ Cliente creado")
+case .failure(let error):
+    print("❌ Error: \(error.message)")
+}
 ```
 
 ### Retrieve cliente
 ```swift
 let epayco = Epayco(publicKey: "XXXXXXXXXX", privateKey: "XXXXXXXX", lang: "ES", test: false)
-let foundCustomer = epayco.customer.get(customerId: "kXyobRkeyBkJPTd57")
-let isCustomerValid = foundCustomer != nil
+let result = epayco.customer.get(customerId: "kXyobRkeyBkJPTd57")
+
+switch result {
+case .success(let customer):
+    print("✅ Cliente encontrado")
+case .failure(let error):
+    print("❌ Error: \(error.message)")
+}
 ```
 
 ### Listar clientes
 ```swift
 let epayco = Epayco(publicKey: "XXXXXXXXXX", privateKey: "XXXXXXXX", lang: "ES", test: false)
-let foundCustomers = epayco.customer.getList()
-let isCustomersListValid = foundCustomers != nil
+let result = epayco.customer.getList()
+
+switch result {
+case .success(let customers):
+    print("✅ Clientes encontrados")
+case .failure(let error):
+    print("❌ Error: \(error.message)")
+}
 ```
 
 ### Actualizar cliente
 ```swift
 let epayco = Epayco(publicKey: "XXXXXXXXXX", privateKey: "XXXXXXXX", lang: "ES", test: false)
-let updatedCustomer = epayco.customer.update(customerId: "kXyobRkeyBkJPTd57", newName: "Hugo")
-let isCustomerUpdateValid = updatedCustomer != nil
+let result = epayco.customer.update(customerId: "kXyobRkeyBkJPTd57", newName: "Hugo")
+
+switch result {
+case .success(let customer):
+    print("✅ Cliente actualizado")
+case .failure(let error):
+    print("❌ Error: \(error.message)")
+}
 ```
 
 ## Planes
@@ -61,29 +159,54 @@ let isCustomerUpdateValid = updatedCustomer != nil
 ```swift
 let epayco = Epayco(publicKey: "XXXXXXXXXX", privateKey: "XXXXXXXX", lang: "ES", test: false)
 let newPlanData = NewPlanModel(id_plan: "hello", name: "Hello", description: "Hello", amount: 5000.50, currency: "COP", interval: "week", interval_count: 3, trial_days: 0)
-let newPlan = epayco.plan.create(newPlanData: newPlanData)
-let isPlanValid = newPlan != nil
+
+let result = epayco.plan.create(newPlanData: newPlanData)
+
+switch result {
+case .success(let plan):
+    print("✅ Plan creado")
+case .failure(let error):
+    print("❌ Error: \(error.message)")
+}
 ```
 
 ### Obtener plan
 ```swift
 let epayco = Epayco(publicKey: "XXXXXXXXXX", privateKey: "XXXXXXXX", lang: "ES", test: false)
-let foundPlan = epayco.plan.get(planId: "hello-world")
-let isPlanValid = foundPlan != nil
+let result = epayco.plan.get(planId: "hello-world")
+
+switch result {
+case .success(let plan):
+    print("✅ Plan encontrado")
+case .failure(let error):
+    print("❌ Error: \(error.message)")
+}
 ```
 
 ### Listar planes
 ```swift
 let epayco = Epayco(publicKey: "XXXXXXXXXX", privateKey: "XXXXXXXX", lang: "ES", test: false)
-let foundPlans = epayco.plan.getList()
-let isPlansListValid = foundPlans != nil
+let result = epayco.plan.getList()
+
+switch result {
+case .success(let plans):
+    print("✅ Planes encontrados")
+case .failure(let error):
+    print("❌ Error: \(error.message)")
+}
 ```
 
 ### Eliminar plan
 ```swift
 let epayco = Epayco(publicKey: "XXXXXXXXXX", privateKey: "XXXXXXXX", lang: "ES", test: false)
-let planRemoval = epayco.plan.remove(planId: "hello-world")
-let isPlansRemoved = planRemoval != nil
+let result = epayco.plan.remove(planId: "hello-world")
+
+switch result {
+case .success(_):
+    print("✅ Plan eliminado")
+case .failure(let error):
+    print("❌ Error: \(error.message)")
+}
 ```
 
 ## Suscripciones
@@ -92,8 +215,15 @@ let isPlansRemoved = planRemoval != nil
 ```swift
 let epayco = Epayco(publicKey: "XXXXXXXXXX", privateKey: "XXXXXXXX", lang: "ES", test: false)
 let newSubscriptionData = NewSubscriptionModel(id_plan: "hello", customer: "kXyobRkeyBkJPTd57", token_card: "078e181c073f", doc_type: "CC", doc_number: "55555", url_confirmation: "", method_confirmation: "")
-let newSubscription = epayco.subscription.create(newSubscriptionData: newSubscriptionData)
-let isSubscriptionValid = newSubscription != nil
+
+let result = epayco.subscription.create(newSubscriptionData: newSubscriptionData)
+
+switch result {
+case .success(let subscription):
+    print("✅ Suscripción creada")
+case .failure(let error):
+    print("❌ Error: \(error.message)")
+}
 ```
 
 ### Obtener suscripción
