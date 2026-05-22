@@ -9,14 +9,14 @@ public struct Token: NetworkManagerDelegate {
         self.privateKey = privateKey
     }
     
-    public func create(newTokenData: NewTokenModel) -> TokenModel? {
+    public func create(newTokenData: NewTokenModel) -> Result<TokenModel, ErrorResponse> {
         let url = K.urlBase + "/v1/tokens"
         let networkManager = NetworkManager<TokenModel>(url, delegate: self)
         let newToken = networkManager.performRequest(httpMethod: "POST", requestBody: newTokenData)
         return newToken
     }
 
-    public func remove(customerId: String, franchise: String, mask: String) -> RemovedTokenModel? {
+    public func remove(customerId: String, franchise: String, mask: String) -> Result<RemovedTokenModel, ErrorResponse> {
         let url = K.urlBase + "/v1/remove/token"
         let networkManager = NetworkManager<RemovedTokenModel>(url, delegate: self)
         let removeTokenData = RemoveTokenModel(franchise: franchise, mask: mask, customer_id: customerId)

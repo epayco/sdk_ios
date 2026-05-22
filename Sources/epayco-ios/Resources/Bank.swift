@@ -15,7 +15,7 @@ public struct Bank: NetworkManagerDelegate {
         self.aes128 = AES(key: privateKey, iv: iv)
     }
     
-   public func create(newBankTransactionData: NewBankTransactionModel) -> BankTransactionModel? {
+   public func create(newBankTransactionData: NewBankTransactionModel) -> Result<BankTransactionModel, ErrorResponse> {
 
 
     // Encriptar extra5 para extras_epayco
@@ -83,7 +83,7 @@ public struct Bank: NetworkManagerDelegate {
     return newTransaction
 }
     
-    public func create(newBankTransactionData: NewBankTransactionModel, splitData: SplitDataModel) -> BankTransactionModel? {
+    public func create(newBankTransactionData: NewBankTransactionModel, splitData: SplitDataModel) -> Result<BankTransactionModel, ErrorResponse> {
 
         let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel()
 
@@ -135,7 +135,7 @@ public struct Bank: NetworkManagerDelegate {
         return newTransaction
     }
     
-    public func getTransaction(transactionId: String) -> BankTransactionGetModel? {
+    public func getTransaction(transactionId: String) -> Result<BankTransactionGetModel, ErrorResponse> {
         let url = K.baseUrlSecure + "/restpagos/pse/transactioninfomation.json?transactionID=" + transactionId + "&public_key=" + self.publicKey
         let networkManager = NetworkManager<BankTransactionGetModel>(url, delegate: self)
         let foundTransaction = networkManager.performRequest(httpMethod: "GET", requestBody: "")
@@ -143,7 +143,7 @@ public struct Bank: NetworkManagerDelegate {
         return foundTransaction
     }
     
-    public func getBanksList() -> BankInfoModel? {
+    public func getBanksList() -> Result<BankInfoModel, ErrorResponse> {
         let url = K.baseUrlSecure + "/restpagos/pse/bancos.json?public_key=" + self.publicKey
         let networkManager = NetworkManager<BankInfoModel>(url, delegate: self)
         let foundBanks = networkManager.performRequest(httpMethod: "GET", requestBody: "")

@@ -176,13 +176,19 @@ public struct NetworkManager<ResponseModel: Decodable> {
     }
     
     private func authenticate() -> String {
-        let authResponse = Auth(delegate.publicKey, delegate.privateKey).authenticate()
+        let authResult = Auth(delegate.publicKey, delegate.privateKey).authenticate()
         
-        if let authToken = authResponse?.bearer_token {
-            print("🔑 Token JWT obtenido correctamente")
-            return authToken
-        } else {
-            print("⚠️ No se pudo obtener token JWT")
+        switch authResult {
+        case .success(let authToken):
+            if let token = authToken.bearer_token {
+                print("🔑 Token JWT obtenido correctamente")
+                return token
+            } else {
+                print("⚠️ No se pudo obtener token JWT")
+                return ""
+            }
+        case .failure(let error):
+            print("❌ Error al obtener token JWT: \(error.message)")
             return ""
         }
     }

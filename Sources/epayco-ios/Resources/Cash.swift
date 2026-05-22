@@ -18,7 +18,7 @@ public struct Cash: NetworkManagerDelegate {
         self.test = test
     }
     
-    public func create(paymentMethod: String, newCashTransactionData: NewCashTransactionModel) -> CashTransactionModel? {
+    public func create(paymentMethod: String, newCashTransactionData: NewCashTransactionModel) -> Result<CashTransactionModel, ErrorResponse> {
         
         let extrasEpayco = newCashTransactionData.extras_epayco ?? ExtrasModel(
         extra1: nil, extra2: nil, extra3: nil, extra4: nil,
@@ -55,7 +55,7 @@ public struct Cash: NetworkManagerDelegate {
         return newCashTransaction
     }
     
-    public func create(paymentMethod: String, newCashTransactionData: NewCashTransactionModel, splitData: SplitDataModel) -> CashTransactionModel? {
+    public func create(paymentMethod: String, newCashTransactionData: NewCashTransactionModel, splitData: SplitDataModel) -> Result<CashTransactionModel, ErrorResponse> {
         
         let extrasEpayco = newCashTransactionData.extras_epayco ?? ExtrasModel(
             extra1: nil, extra2: nil, extra3: nil, extra4: nil,
@@ -101,7 +101,7 @@ public struct Cash: NetworkManagerDelegate {
         return newCashTransaction
     }
     
-    public func getTransaction(refPayco: String) -> CashTransactionModel? {
+    public func getTransaction(refPayco: String) -> Result<CashTransactionModel, ErrorResponse> {
         let url = K.baseUrlSecure + "/restpagos/transaction/response.json?ref_payco=" + refPayco + "&public_key=" + self.publicKey
         let networkManager = NetworkManager<CashTransactionModel>(url, delegate: self)
         let foundTransaction = networkManager.performRequest(httpMethod: "GET", requestBody: "")

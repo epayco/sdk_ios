@@ -1,7 +1,7 @@
 import Foundation
 
 /// Modelo de respuesta de error - Formato unificado para todos los errores
-public struct ErrorResponse: Codable {
+public struct ErrorResponse: Codable, Error {
     public let status: Bool
     public let message: String
     public let data: [String: AnyCodable]?
