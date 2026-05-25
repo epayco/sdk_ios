@@ -219,7 +219,7 @@ public struct ChargeExampleUsage {
  switch result {
  case .success(let transaction):
      // Transacción exitosa
-     print("✅ Éxito: \(transaction.data?.ref_payco ?? 0)")
+     print("✅ Éxito: \(transaction.data.ref_payco ?? 0)")
      
  case .failure(let error):
      // Tienes acceso a:
