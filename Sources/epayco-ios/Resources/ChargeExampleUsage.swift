@@ -44,12 +44,16 @@ public struct ChargeExampleUsage {
         case .success(let transaction):
             print("✅ TRANSACCIÓN EXITOSA")
             print("═══════════════════════════════════════════════════")
-            print("🏷️  Referencia: \(transaction.data.ref_payco ?? 0)")
-            print("💰 Monto: \(transaction.data.valor ?? "")")
-            print("📝 Autorización: \(transaction.data.autorizacion ?? "")")
-            print("📋 Recibo: \(transaction.data.recibo ?? "")")
-            print("📅 Fecha: \(transaction.data.fecha ?? "")")
-            print("✔️  Estado: \(transaction.data.estado ?? "")")
+            if let transactionData = transaction.data {
+                print("🏷️  Referencia: \(transactionData.ref_payco ?? 0)")
+                print("💰 Monto: \(transactionData.valor ?? "")")
+                print("📝 Autorización: \(transactionData.autorizacion ?? "")")
+                print("📋 Recibo: \(transactionData.recibo ?? "")")
+                print("📅 Fecha: \(transactionData.fecha ?? "")")
+                print("✔️  Estado: \(transactionData.estado ?? "")")
+            } else {
+                print("⚠️  No hay datos de transacción disponibles")
+            }
             print("═══════════════════════════════════════════════════")
             
         case .failure(let error):
@@ -102,7 +106,7 @@ public struct ChargeExampleUsage {
             split_app_id: "app123",
             split_merchant_id: "merchant123",
             split_type: "percentage",
-            split_rule: [],
+            split_rule: "01",
             split_primary_receiver: "receiver123",
             split_primary_receiver_fee: "10000",
             split_receivers: []
@@ -113,7 +117,9 @@ public struct ChargeExampleUsage {
         switch result {
         case .success(let transaction):
             print("✅ SPLIT DE PAGO CREADO EXITOSAMENTE")
-            print("🏷️  Ref: \(transaction.data.ref_payco ?? 0)")
+            if let transactionData = transaction.data {
+                print("🏷️  Ref: \(transactionData.ref_payco ?? 0)")
+            }
             
         case .failure(let error):
             print("❌ Error en split: \(error.message)")
@@ -134,7 +140,11 @@ public struct ChargeExampleUsage {
         switch result {
         case .success(let transaction):
             print("✅ TRANSACCIÓN ENCONTRADA")
-            print("Estado: \(transaction.data.estado ?? "")")
+            if let transactionData = transaction.data {
+                print("Estado: \(transactionData.estado ?? "")")
+            } else {
+                print("⚠️  No hay datos de transacción disponibles")
+            }
             
         case .failure(let error):
             print("❌ Error: \(error.message)")
@@ -211,7 +221,7 @@ public struct ChargeExampleUsage {
  switch result {
  case .success(let transaction):
      // Transacción exitosa
-     print("✅ Éxito: \(transaction.data.ref_payco)")
+     print("✅ Éxito: \(transaction.data?.ref_payco ?? 0)")
      
  case .failure(let error):
      // Tienes acceso a:
