@@ -27,7 +27,7 @@ public struct Subscription: NetworkManagerDelegate {
 
     public func getList() -> Result<SubscriptionListModel, ErrorResponse> {
         let url = K.urlBase + "/recurring/v1/subscriptions/" + self.publicKey
-        let networkManager = NetworkManager<SubscriptionModel>(url, delegate: self)
+        let networkManager = NetworkManager<SubscriptionListModel>(url, delegate: self)
         let foundSubscriptions = networkManager.performRequest(httpMethod: "GET", requestBody: "")
         
         return foundSubscriptions

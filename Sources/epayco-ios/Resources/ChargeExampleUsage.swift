@@ -44,16 +44,13 @@ public struct ChargeExampleUsage {
         case .success(let transaction):
             print("✅ TRANSACCIÓN EXITOSA")
             print("═══════════════════════════════════════════════════")
-            if let transactionData = transaction.data {
-                print("🏷️  Referencia: \(transactionData.ref_payco ?? 0)")
-                print("💰 Monto: \(transactionData.valor ?? "")")
-                print("📝 Autorización: \(transactionData.autorizacion ?? "")")
-                print("📋 Recibo: \(transactionData.recibo ?? "")")
-                print("📅 Fecha: \(transactionData.fecha ?? "")")
-                print("✔️  Estado: \(transactionData.estado ?? "")")
-            } else {
-                print("⚠️  No hay datos de transacción disponibles")
-            }
+            let transactionData = transaction.data
+            print("🏷️  Referencia: \(transactionData.ref_payco ?? 0)")
+            print("💰 Monto: \(transactionData.valor ?? \"\")")
+            print("📝 Autorización: \(transactionData.autorizacion ?? \"\")")
+            print("📋 Recibo: \(transactionData.recibo ?? \"\")")
+            print("📅 Fecha: \(transactionData.fecha ?? \"\")")
+            print("✔️  Estado: \(transactionData.estado ?? \"\")")
             print("═══════════════════════════════════════════════════")
             
         case .failure(let error):
@@ -117,9 +114,8 @@ public struct ChargeExampleUsage {
         switch result {
         case .success(let transaction):
             print("✅ SPLIT DE PAGO CREADO EXITOSAMENTE")
-            if let transactionData = transaction.data {
-                print("🏷️  Ref: \(transactionData.ref_payco ?? 0)")
-            }
+            let transactionData = transaction.data
+            print("🏷️  Ref: \(transactionData.ref_payco ?? 0)")
             
         case .failure(let error):
             print("❌ Error en split: \(error.message)")
@@ -182,8 +178,10 @@ public struct ChargeExampleUsage {
         // Acceso a datos adicionales del error si existen
         if let errorData = error.data {
             print("📊 Información adicional del error:")
-            for (key, value) in errorData {
-                print("   • \(key): \(value)")
+            if let dict = errorData as? [String: Any] {
+                for (key, value) in dict {
+                    print("   • \(key): \(value)")
+                }
             }
         }
     }
