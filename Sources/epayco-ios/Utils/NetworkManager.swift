@@ -23,7 +23,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
     ) -> Result<ResponseModel, ErrorResponse> {
         
         guard let url = URL(string: self.url) else {
-            print("❌ URL inválida: \(self.url)")
+            print(" URL inválida: \(self.url)")
             return .failure(ErrorResponse(
                 status: false,
                 message: "URL inválida",
@@ -56,7 +56,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
             request.httpBody = try? JSONEncoder().encode(requestBody)
         }
         
-        print("🌐 REQUEST: \(httpMethod) \(self.url)")
+        // print("🌐 REQUEST: \(httpMethod) \(self.url)")
         
         let task = session.dataTask(with: request) { (data, response, error) in
             resultData = data
@@ -68,10 +68,10 @@ public struct NetworkManager<ResponseModel: Decodable> {
         task.resume()
         semaphore.wait()
         
-        // 🔴 MANEJO DE ERRORES DE RED
+        // MANEJO DE ERRORES DE RED
         if let error = resultError {
             let errorMsg = error.localizedDescription
-            print("❌ Error de red: \(errorMsg)")
+            print("Error de red: \(errorMsg)")
             return .failure(ErrorResponse(
                 status: false,
                 message: "Error de conexión: \(errorMsg)",
@@ -80,9 +80,9 @@ public struct NetworkManager<ResponseModel: Decodable> {
             ))
         }
         
-        // 🟠 OBTENER HTTP STATUS CODE
+        // OBTENER HTTP STATUS CODE
         guard let httpResponse = resultResponse as? HTTPURLResponse else {
-            print("❌ No se pudo obtener respuesta del servidor")
+            print("No se pudo obtener respuesta del servidor")
             return .failure(ErrorResponse(
                 status: false,
                 message: "No se pudo obtener respuesta del servidor",
@@ -92,14 +92,14 @@ public struct NetworkManager<ResponseModel: Decodable> {
         }
         
         let statusCode = httpResponse.statusCode
-        print("📊 HTTP Status: \(statusCode)")
+       // print("HTTP Status: \(statusCode)")
         
-        // 🟢 CASO EXITOSO (200-206)
+        // CASO EXITOSO (200-206)
         if statusCode >= 200 && statusCode <= 206 {
             if httpMethod == "DELETE" {
                 // Para DELETE, consideramos exitoso 204 o 200
                 if statusCode == 204 || statusCode == 200 {
-                    print("✅ DELETE request exitoso")
+                    print("DELETE request exitoso")
                     // Retornamos una respuesta vacía para DELETE
                     // Nota: En casos reales, deberías tener un modelo para DELETE
                     return .success(ResponseModel.self as! ResponseModel)
@@ -108,14 +108,12 @@ public struct NetworkManager<ResponseModel: Decodable> {
             
             // Intentar parsear respuesta
             if let data = resultData, data.count > 0 {
-                print("📥 Response body: \(String(data: data, encoding: .utf8) ?? "empty")")
                 
                 do {
                     let decoded = try JSONDecoder().decode(ResponseModel.self, from: data)
-                    print("✅ Datos parseados correctamente")
                     return .success(decoded)
                 } catch let decodingError {
-                    print("❌ Error al parsear JSON: \(decodingError)")
+                    print("Error al parsear JSON: \(decodingError)")
                     return .failure(ErrorResponse(
                         status: false,
                         message: "Error al procesar respuesta del servidor: \(decodingError.localizedDescription)",
@@ -124,8 +122,6 @@ public struct NetworkManager<ResponseModel: Decodable> {
                     ))
                 }
             }
-            
-            print("⚠️ Respuesta vacía pero status exitoso")
             return .failure(ErrorResponse(
                 status: false,
                 message: "Respuesta vacía del servidor",
@@ -134,7 +130,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
             ))
         }
         
-        // 🔴 CASO ERROR (400-599)
+        // CASO ERROR (400-599)
         if statusCode >= 400 && statusCode < 600 {
             var responseBody: [String: Any]?
             var errorMessage: String
@@ -142,20 +138,20 @@ public struct NetworkManager<ResponseModel: Decodable> {
             
             // Intenta extraer el body
             if let data = resultData, data.count > 0 {
-                print("📥 Error response body: \(String(data: data, encoding: .utf8) ?? "empty")")
+                print("Error response body: \(String(data: data, encoding: .utf8) ?? "empty")")
                 
                 if let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
                     responseBody = jsonObject
                 }
             } else {
-                print("⚠️ Body vacío en error")
+                print("Body vacío en error")
             }
             
             // MAPEAR ERROR: primero intenta extraer del JSON, sino usa el status code
             errorMessage = ErrorMapper.extractErrorMessage(from: responseBody, statusCode: statusCode)
             errorData = ErrorMapper.extractErrorData(from: responseBody)
             
-            print("🚨 Error mapeado [\(statusCode)]: \(errorMessage)")
+            print("Error mapeado [\(statusCode)]: \(errorMessage)")
             
             return .failure(ErrorResponse(
                 status: false,
@@ -166,7 +162,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
         }
         
         // Caso inesperado
-        print("⚠️ Status code inesperado: \(statusCode)")
+        print("Status code inesperado: \(statusCode)")
         return .failure(ErrorResponse(
             status: false,
             message: "Respuesta inesperada del servidor",
@@ -181,14 +177,14 @@ public struct NetworkManager<ResponseModel: Decodable> {
         switch authResult {
         case .success(let authToken):
             if let token = authToken.bearer_token {
-                print("🔑 Token JWT obtenido correctamente")
+                print("Token JWT obtenido correctamente")
                 return token
             } else {
-                print("⚠️ No se pudo obtener token JWT")
+                print("No se pudo obtener token JWT")
                 return ""
             }
         case .failure(let error):
-            print("❌ Error al obtener token JWT: \(error.message)")
+            print("Error al obtener token JWT: \(error.message)")
             return ""
         }
     }
