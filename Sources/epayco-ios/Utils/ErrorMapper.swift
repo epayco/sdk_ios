@@ -49,12 +49,18 @@ public struct ErrorMapper {
             return mapStatusCodeToMessage(statusCode)
         }
         
-        // PRIORIDAD 1: data.errors
+        // PRIORIDAD 1: errors al nivel superior
+        if let errors = json["errors"] as? String, !errors.isEmpty {
+            print("DEBUG - errors (nivel superior) encontrado: \(errors)")
+            return errors
+        }
+        
+        // PRIORIDAD 2: data.errors
         if let data = json["data"] as? [String: Any] {
             print("DEBUG - data encontrado: \(data)")
             
             if let errors = data["errors"] as? String, !errors.isEmpty {
-                print("DEBUG - errors encontrado: \(errors)")
+                print("DEBUG - errors (dentro de data) encontrado: \(errors)")
                 return errors
             }
             
@@ -62,17 +68,15 @@ public struct ErrorMapper {
                 print("DEBUG - description encontrado: \(description)")
                 return description
             }
-        } else {
-            print("DEBUG - data NO encontrado en json")
         }
         
-        // PRIORIDAD 2: message principal
+        // PRIORIDAD 3: message principal
         if let message = json["message"] as? String, !message.isEmpty {
             print("DEBUG - message encontrado: \(message)")
             return message
         }
         
-        // PRIORIDAD 3: error
+        // PRIORIDAD 4: error
         if let error = json["error"] as? String, !error.isEmpty {
             print("DEBUG - error encontrado: \(error)")
             return error
