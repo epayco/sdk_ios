@@ -47,9 +47,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
         request.setValue("swift", forHTTPHeaderField: "lang")
         
         // Imprimir URL y headers
-        print("🌐 \(httpMethod) \(self.url)")
-        print("📋 Headers: type=\(requestType), lang=swift")
-        
+  
         if isAuthRequired {
             let authToken = self.url.contains(K.urlBase) ? "Bearer " + authenticate() : "Basic " + Data(delegate.publicKey.utf8).base64EncodedString()
             request.setValue(authToken, forHTTPHeaderField: "Authorization")
@@ -63,12 +61,11 @@ public struct NetworkManager<ResponseModel: Decodable> {
                 if let jsonObject = try? JSONSerialization.jsonObject(with: bodyData) as? [String: Any],
                    let prettyData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted),
                    let prettyString = String(data: prettyData, encoding: .utf8) {
-                    print("\n📤 REQUEST BODY (formateado):\n\(prettyString)\n")
+                    print("\n📤 REQUEST BODY:\n\(prettyString)\n")
                 }
             }
         }
         
-        // print("🌐 REQUEST: \(httpMethod) \(self.url)")
         
         let task = session.dataTask(with: request) { (data, response, error) in
             resultData = data
@@ -117,18 +114,21 @@ public struct NetworkManager<ResponseModel: Decodable> {
             if let data = resultData, data.count > 0 {
                 // Primero, imprimir el raw response
                 if let raw = String(data: data, encoding: .utf8) {
-                    print("📨 RAW RESPONSE:\n\(raw)")
                 }
                 
                 // Intentar parsear como JSON genérico para validar
                 if let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                    print("📋 PARSED JSON:\n\(jsonObject)")
                     
                     // Si el JSON tiene "status": false, es un error aunque sea 200
                     if let status = jsonObject["status"] as? Bool, !status {
-                        print("⚠️ API retornó status 200 pero con 'status': false")
                         let errorMessage = ErrorMapper.extractErrorMessage(from: jsonObject, statusCode: 200)
                         let errorData = ErrorMapper.extractErrorData(from: jsonObject)
+                        
+                        print("\n📊 EXTRACTED ERROR DATA (Status 200 con status:false):")
+                        print("Message: \(errorMessage)")
+                        print("Data: \(errorData ?? [:])")
+                        print("\n")
+                        
                         return .failure(ErrorResponse(
                             status: false,
                             message: errorMessage,
@@ -170,7 +170,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
                 if let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
                     if let prettyData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted),
                        let prettyString = String(data: prettyData, encoding: .utf8) {
-                        print("\n❌ ERROR RESPONSE (formateado):\n\(prettyString)\n")
+                        print("\n❌ ERROR RESPONSE:\n\(prettyString)\n")
                     }
                     responseBody = jsonObject
                 }
@@ -179,6 +179,12 @@ public struct NetworkManager<ResponseModel: Decodable> {
             // MAPEAR ERROR: primero intenta extraer del JSON, sino usa el status code
             errorMessage = ErrorMapper.extractErrorMessage(from: responseBody, statusCode: statusCode)
             errorData = ErrorMapper.extractErrorData(from: responseBody)
+            
+            // Imprimir antes de retornar
+            print("\n📊 EXTRACTED ERROR DATA:")
+            print("Message: \(errorMessage)")
+            print("Data: \(errorData ?? [:])")
+            print("\n")
             
             return .failure(ErrorResponse(
                 status: false,
