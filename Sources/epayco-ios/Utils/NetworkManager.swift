@@ -58,9 +58,13 @@ public struct NetworkManager<ResponseModel: Decodable> {
         if httpMethod != "GET" {
             request.httpBody = try? JSONEncoder().encode(requestBody)
             
-            // Imprimir el body que se envía
-            if let bodyData = request.httpBody, let bodyString = String(data: bodyData, encoding: .utf8) {
-                print("📤 REQUEST BODY:\n\(bodyString)")
+            // Imprimir el body que se envía formateado
+            if let bodyData = request.httpBody {
+                if let jsonObject = try? JSONSerialization.jsonObject(with: bodyData) as? [String: Any],
+                   let prettyData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted),
+                   let prettyString = String(data: prettyData, encoding: .utf8) {
+                    print("\n📤 REQUEST BODY (formateado):\n\(prettyString)\n")
+                }
             }
         }
         
@@ -162,14 +166,12 @@ public struct NetworkManager<ResponseModel: Decodable> {
             
             // Intenta extraer el body
             if let data = resultData, data.count > 0 {
-                // Imprimir raw response SIN PROCESAR
-                if let raw = String(data: data, encoding: .utf8) {
-                    print("\n❌ ERROR RESPONSE RAW:")
-                    print(raw)
-                    print("\n")
-                }
-                
+                // Imprimir respuesta formateada
                 if let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                    if let prettyData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted),
+                       let prettyString = String(data: prettyData, encoding: .utf8) {
+                        print("\n❌ ERROR RESPONSE (formateado):\n\(prettyString)\n")
+                    }
                     responseBody = jsonObject
                 }
             }
