@@ -49,7 +49,7 @@ public struct ErrorMapper {
         }
         
         var mainMessage = ""
-        var detailMessage = ""
+        var detailErrors: [String] = []
         
         // Obtener mensaje principal
         if let message = json["message"] as? String, !message.isEmpty {
@@ -60,26 +60,26 @@ public struct ErrorMapper {
             mainMessage = description
         }
         
-        // Buscar error detallado en data.errors
+        // Buscar errores detallados en data
         if let data = json["data"] as? [String: Any] {
-            if let detailError = data["errors"] as? String, !detailError.isEmpty {
-                detailMessage = detailError
-            } else if let description = data["description"] as? String, !description.isEmpty {
-                detailMessage = description
+            // data.errors (puede ser string)
+            if let errors = data["errors"] as? String, !errors.isEmpty {
+                detailErrors.append(errors)
+            }
+            // data.description (puede ser string)
+            if let description = data["description"] as? String, !description.isEmpty {
+                detailErrors.append(description)
             }
         }
         
-        // Combinar mensajes
-        if !mainMessage.isEmpty && !detailMessage.isEmpty {
-            return "\(mainMessage) - \(detailMessage)"
-        } else if !mainMessage.isEmpty {
-            return mainMessage
-        } else if !detailMessage.isEmpty {
-            return detailMessage
+        // Combinar todos los mensajes
+        var fullMessage = mainMessage
+        if !detailErrors.isEmpty {
+            let detailsText = detailErrors.joined(separator: " | ")
+            fullMessage = mainMessage.isEmpty ? detailsText : "\(mainMessage) - \(detailsText)"
         }
         
-        // Fallback al mapeo por status code
-        return mapStatusCodeToMessage(statusCode)
+        return fullMessage.isEmpty ? mapStatusCodeToMessage(statusCode) : fullMessage
     }
     
     /// Extrae datos adicionales del error desde el JSON
