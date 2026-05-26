@@ -62,10 +62,16 @@ public struct ErrorMapper {
         
         // Buscar errores detallados en data
         if let data = json["data"] as? [String: Any] {
-            // data.errors (puede ser string)
+            // data.errors (puede ser string, array o diccionario)
             if let errors = data["errors"] as? String, !errors.isEmpty {
                 detailErrors.append(errors)
+            } else if let errorsArray = data["errors"] as? [String] {
+                detailErrors.append(contentsOf: errorsArray)
+            } else if let errorsDict = data["errors"] as? [String: Any] {
+                let errorStrings = errorsDict.map { "\($0.key): \($0.value)" }
+                detailErrors.append(contentsOf: errorStrings)
             }
+            
             // data.description (puede ser string)
             if let description = data["description"] as? String, !description.isEmpty {
                 detailErrors.append(description)

@@ -102,6 +102,28 @@ public struct NetworkManager<ResponseModel: Decodable> {
             
             // Intentar parsear respuesta
             if let data = resultData, data.count > 0 {
+                // Primero, imprimir el raw response
+                if let raw = String(data: data, encoding: .utf8) {
+                    print("📨 RAW RESPONSE:\n\(raw)")
+                }
+                
+                // Intentar parsear como JSON genérico para validar
+                if let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                    print("📋 PARSED JSON:\n\(jsonObject)")
+                    
+                    // Si el JSON tiene "status": false, es un error aunque sea 200
+                    if let status = jsonObject["status"] as? Bool, !status {
+                        print("⚠️ API retornó status 200 pero con 'status': false")
+                        let errorMessage = ErrorMapper.extractErrorMessage(from: jsonObject, statusCode: 200)
+                        let errorData = ErrorMapper.extractErrorData(from: jsonObject)
+                        return .failure(ErrorResponse(
+                            status: false,
+                            message: errorMessage,
+                            data: errorData,
+                            status_code: 200
+                        ))
+                    }
+                }
                 
                 do {
                     let decoded = try JSONDecoder().decode(ResponseModel.self, from: data)
