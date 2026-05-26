@@ -46,6 +46,10 @@ public struct NetworkManager<ResponseModel: Decodable> {
         request.setValue(requestType, forHTTPHeaderField: "type")
         request.setValue("swift", forHTTPHeaderField: "lang")
         
+        // Imprimir URL y headers
+        print("🌐 \(httpMethod) \(self.url)")
+        print("📋 Headers: type=\(requestType), lang=swift")
+        
         if isAuthRequired {
             let authToken = self.url.contains(K.urlBase) ? "Bearer " + authenticate() : "Basic " + Data(delegate.publicKey.utf8).base64EncodedString()
             request.setValue(authToken, forHTTPHeaderField: "Authorization")
@@ -53,6 +57,11 @@ public struct NetworkManager<ResponseModel: Decodable> {
         
         if httpMethod != "GET" {
             request.httpBody = try? JSONEncoder().encode(requestBody)
+            
+            // Imprimir el body que se envía
+            if let bodyData = request.httpBody, let bodyString = String(data: bodyData, encoding: .utf8) {
+                print("📤 REQUEST BODY:\n\(bodyString)")
+            }
         }
         
         // print("🌐 REQUEST: \(httpMethod) \(self.url)")
@@ -153,20 +162,15 @@ public struct NetworkManager<ResponseModel: Decodable> {
             
             // Intenta extraer el body
             if let data = resultData, data.count > 0 {
-                // Imprimir raw response
+                // Imprimir raw response SIN PROCESAR
                 if let raw = String(data: data, encoding: .utf8) {
-                    print("📨 RAW RESPONSE:\n\(raw)")
+                    print("\n❌ ERROR RESPONSE RAW:")
+                    print(raw)
+                    print("\n")
                 }
                 
                 if let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
                     responseBody = jsonObject
-                    print("📋 PARSED JSON:\n\(jsonObject)")
-                    
-                    // Imprimir respuesta formateada
-                    if let prettyData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted),
-                       let prettyString = String(data: prettyData, encoding: .utf8) {
-                        print("📨 RESPUESTA COMPLETA:\n\(prettyString)")
-                    }
                 }
             }
             
