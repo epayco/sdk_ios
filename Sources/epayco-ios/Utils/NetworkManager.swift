@@ -46,8 +46,6 @@ public struct NetworkManager<ResponseModel: Decodable> {
         request.setValue(requestType, forHTTPHeaderField: "type")
         request.setValue("swift", forHTTPHeaderField: "lang")
         
-        // Imprimir URL y headers
-  
         if isAuthRequired {
             let authToken = self.url.contains(K.urlBase) ? "Bearer " + authenticate() : "Basic " + Data(delegate.publicKey.utf8).base64EncodedString()
             request.setValue(authToken, forHTTPHeaderField: "Authorization")
@@ -55,17 +53,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
         
         if httpMethod != "GET" {
             request.httpBody = try? JSONEncoder().encode(requestBody)
-            
-            // Imprimir el body que se envía formateado
-            if let bodyData = request.httpBody {
-                if let jsonObject = try? JSONSerialization.jsonObject(with: bodyData) as? [String: Any],
-                   let prettyData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted),
-                   let prettyString = String(data: prettyData, encoding: .utf8) {
-                    print("\n📤 REQUEST BODY:\n\(prettyString)\n")
-                }
-            }
         }
-        
         
         let task = session.dataTask(with: request) { (data, response, error) in
             resultData = data
@@ -99,7 +87,6 @@ public struct NetworkManager<ResponseModel: Decodable> {
         }
         
         let statusCode = httpResponse.statusCode
-       // print("HTTP Status: \(statusCode)")
         
         // CASO EXITOSO (200-206)
         if statusCode >= 200 && statusCode <= 206 {
@@ -112,10 +99,6 @@ public struct NetworkManager<ResponseModel: Decodable> {
             
             // Intentar parsear respuesta
             if let data = resultData, data.count > 0 {
-                // Primero, imprimir el raw response
-                if let raw = String(data: data, encoding: .utf8) {
-                }
-                
                 // Intentar parsear como JSON genérico para validar
                 if let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
                     
@@ -123,12 +106,6 @@ public struct NetworkManager<ResponseModel: Decodable> {
                     if let status = jsonObject["status"] as? Bool, !status {
                         let errorMessage = ErrorMapper.extractErrorMessage(from: jsonObject, statusCode: 200)
                         let errorData = ErrorMapper.extractErrorData(from: jsonObject)
-                        
-                        print("\n📊 EXTRACTED ERROR DATA (Status 200 con status:false):")
-                        print("Message: \(errorMessage)")
-                        print("Data: \(errorData ?? [:])")
-                        print("\n")
-                        
                         return .failure(ErrorResponse(
                             status: false,
                             message: errorMessage,
@@ -166,12 +143,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
             
             // Intenta extraer el body
             if let data = resultData, data.count > 0 {
-                // Imprimir respuesta formateada
                 if let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                    if let prettyData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted),
-                       let prettyString = String(data: prettyData, encoding: .utf8) {
-                        print("\n❌ ERROR RESPONSE:\n\(prettyString)\n")
-                    }
                     responseBody = jsonObject
                 }
             }
@@ -179,12 +151,6 @@ public struct NetworkManager<ResponseModel: Decodable> {
             // MAPEAR ERROR: primero intenta extraer del JSON, sino usa el status code
             errorMessage = ErrorMapper.extractErrorMessage(from: responseBody, statusCode: statusCode)
             errorData = ErrorMapper.extractErrorData(from: responseBody)
-            
-            // Imprimir antes de retornar
-            print("\n📊 EXTRACTED ERROR DATA:")
-            print("Message: \(errorMessage)")
-            print("Data: \(errorData ?? [:])")
-            print("\n")
             
             return .failure(ErrorResponse(
                 status: false,
