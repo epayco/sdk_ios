@@ -41,43 +41,45 @@ public struct ErrorMapper {
     /// Extrae el mensaje de error del JSON response
     /// Intenta múltiples formatos comunes de respuesta de API
     /// Retorna solo el mensaje principal, los detalles están en extractErrorData()
- public static func extractErrorMessage(
-    from jsonData: [String: Any]?,
-    statusCode: Int
-) -> String {
-
-    guard let json = jsonData else {
+    public static func extractErrorMessage(
+        from jsonData: [String: Any]?,
+        statusCode: Int
+    ) -> String {
+        guard let json = jsonData else {
+            return mapStatusCodeToMessage(statusCode)
+        }
+        
+        // PRIORIDAD 1: data.errors
+        if let data = json["data"] as? [String: Any] {
+            print("DEBUG - data encontrado: \(data)")
+            
+            if let errors = data["errors"] as? String, !errors.isEmpty {
+                print("DEBUG - errors encontrado: \(errors)")
+                return errors
+            }
+            
+            if let description = data["description"] as? String, !description.isEmpty {
+                print("DEBUG - description encontrado: \(description)")
+                return description
+            }
+        } else {
+            print("DEBUG - data NO encontrado en json")
+        }
+        
+        // PRIORIDAD 2: message principal
+        if let message = json["message"] as? String, !message.isEmpty {
+            print("DEBUG - message encontrado: \(message)")
+            return message
+        }
+        
+        // PRIORIDAD 3: error
+        if let error = json["error"] as? String, !error.isEmpty {
+            print("DEBUG - error encontrado: \(error)")
+            return error
+        }
+        
         return mapStatusCodeToMessage(statusCode)
     }
-
-    // PRIORIDAD 1: data.errors
-    if let data = json["data"] as? [String: Any] {
-
-        if let errors = data["errors"] as? String,
-           !errors.isEmpty {
-            return errors
-        }
-
-        if let description = data["description"] as? String,
-           !description.isEmpty {
-            return description
-        }
-    }
-
-    // PRIORIDAD 2: message principal
-    if let message = json["message"] as? String,
-       !message.isEmpty {
-        return message
-    }
-
-    // PRIORIDAD 3: error
-    if let error = json["error"] as? String,
-       !error.isEmpty {
-        return error
-    }
-
-    return mapStatusCodeToMessage(statusCode)
-}
     
     /// Extrae datos adicionales del error desde el JSON
     /// Devuelve un diccionario con status, description y errors
