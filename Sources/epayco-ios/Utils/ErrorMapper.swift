@@ -48,41 +48,37 @@ public struct ErrorMapper {
             return mapStatusCodeToMessage(statusCode)
         }
         
-        // Intenta formato 1: "message" directo
+        var mainMessage = ""
+        var detailMessage = ""
+        
+        // Obtener mensaje principal
         if let message = json["message"] as? String, !message.isEmpty {
-            print("✅ Mensaje extraído de 'message': \(message)")
-            return message
+            mainMessage = message
+        } else if let error = json["error"] as? String, !error.isEmpty {
+            mainMessage = error
+        } else if let description = json["description"] as? String, !description.isEmpty {
+            mainMessage = description
         }
         
-        // Intenta formato 2: "errors[0].message"
-        if let errors = json["errors"] as? [[String: Any]], 
-           let firstError = errors.first,
-           let message = firstError["message"] as? String,
-           !message.isEmpty {
-            print("✅ Mensaje extraído de 'errors[0].message': \(message)")
-            return message
+        // Buscar error detallado en data.errors
+        if let data = json["data"] as? [String: Any] {
+            if let detailError = data["errors"] as? String, !detailError.isEmpty {
+                detailMessage = detailError
+            } else if let description = data["description"] as? String, !description.isEmpty {
+                detailMessage = description
+            }
         }
         
-        // Intenta formato 3: "errors" como array de strings
-        if let errors = json["errors"] as? [String], let firstError = errors.first {
-            print("✅ Mensaje extraído de 'errors[0]': \(firstError)")
-            return firstError
-        }
-        
-        // Intenta formato 4: "error" directo
-        if let error = json["error"] as? String, !error.isEmpty {
-            print("✅ Mensaje extraído de 'error': \(error)")
-            return error
-        }
-        
-        // Intenta formato 5: "description"
-        if let description = json["description"] as? String, !description.isEmpty {
-            print("✅ Mensaje extraído de 'description': \(description)")
-            return description
+        // Combinar mensajes
+        if !mainMessage.isEmpty && !detailMessage.isEmpty {
+            return "\(mainMessage) - \(detailMessage)"
+        } else if !mainMessage.isEmpty {
+            return mainMessage
+        } else if !detailMessage.isEmpty {
+            return detailMessage
         }
         
         // Fallback al mapeo por status code
-        print("⚠️ No se encontró mensaje en JSON, usando mapeo de status code")
         return mapStatusCodeToMessage(statusCode)
     }
     
@@ -90,31 +86,12 @@ public struct ErrorMapper {
     public static func extractErrorData(from jsonData: [String: Any]?) -> [String: AnyCodable]? {
         guard let json = jsonData else { return nil }
         
-        // Intenta obtener el objeto "data"
+        // Obtener el objeto "data" que contiene los detalles
         if let data = json["data"] as? [String: Any] {
-            print("📊 Datos del error extraídos")
             return convertToDictionary(data)
         }
         
-        // Si no hay "data", intenta con la raíz misma (excluyendo campos conocidos)
-        var resultData: [String: AnyCodable] = [:]
-        let excludedKeys = ["status", "message", "error", "errors", "description"]
-        
-        for (key, value) in json {
-            if !excludedKeys.contains(key) {
-                if let stringValue = value as? String {
-                    resultData[key] = .string(stringValue)
-                } else if let intValue = value as? Int {
-                    resultData[key] = .int(intValue)
-                } else if let boolValue = value as? Bool {
-                    resultData[key] = .bool(boolValue)
-                } else if let doubleValue = value as? Double {
-                    resultData[key] = .double(doubleValue)
-                }
-            }
-        }
-        
-        return resultData.isEmpty ? nil : resultData
+        return nil
     }
     
     /// Convierte un Dictionary común a [String: AnyCodable]
