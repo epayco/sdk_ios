@@ -152,12 +152,32 @@ public struct NetworkManager<ResponseModel: Decodable> {
             errorMessage = ErrorMapper.extractErrorMessage(from: responseBody, statusCode: statusCode)
             errorData = ErrorMapper.extractErrorData(from: responseBody)
             
-            return .failure(ErrorResponse(
+            let errorResponse = ErrorResponse(
                 status: false,
                 message: errorMessage,
                 data: errorData,
                 status_code: statusCode
-            ))
+            )
+            
+            // Formatear como JSON para imprimir
+            if let responseBody = responseBody {
+                var jsonDict: [String: Any] = [
+                    "status": false,
+                    "message": errorMessage,
+                    "status_code": statusCode
+                ]
+                
+                if let data = responseBody["data"] as? [String: Any] {
+                    jsonDict["data"] = data
+                }
+                
+                if let jsonData = try? JSONSerialization.data(withJSONObject: jsonDict, options: .prettyPrinted),
+                   let jsonString = String(data: jsonData, encoding: .utf8) {
+                    print("ERROR RESPONSE: \(jsonString)")
+                }
+            }
+            
+            return .failure(errorResponse)
         }
         
         // Caso inesperado
