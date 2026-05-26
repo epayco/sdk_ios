@@ -173,7 +173,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
                 
                 if let jsonData = try? JSONSerialization.data(withJSONObject: jsonDict, options: .prettyPrinted),
                    let jsonString = String(data: jsonData, encoding: .utf8) {
-                    print("ERROR RESPONSE: \(jsonString)")
+                    print("\(jsonString)")
                 }
             }
             
