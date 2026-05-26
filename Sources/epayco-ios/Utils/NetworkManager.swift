@@ -153,8 +153,14 @@ public struct NetworkManager<ResponseModel: Decodable> {
             
             // Intenta extraer el body
             if let data = resultData, data.count > 0 {
+                // Imprimir raw response
+                if let raw = String(data: data, encoding: .utf8) {
+                    print("📨 RAW RESPONSE:\n\(raw)")
+                }
+                
                 if let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
                     responseBody = jsonObject
+                    print("📋 PARSED JSON:\n\(jsonObject)")
                     
                     // Imprimir respuesta formateada
                     if let prettyData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted),
