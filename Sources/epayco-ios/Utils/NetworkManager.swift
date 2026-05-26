@@ -131,9 +131,14 @@ public struct NetworkManager<ResponseModel: Decodable> {
             
             // Intenta extraer el body
             if let data = resultData, data.count > 0 {
-                print("📨 RESPUESTA CRUDA: \(String(data: data, encoding: .utf8) ?? "empty")")
                 if let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
                     responseBody = jsonObject
+                    
+                    // Imprimir respuesta formateada
+                    if let prettyData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted),
+                       let prettyString = String(data: prettyData, encoding: .utf8) {
+                        print("📨 RESPUESTA COMPLETA:\n\(prettyString)")
+                    }
                 }
             }
             
