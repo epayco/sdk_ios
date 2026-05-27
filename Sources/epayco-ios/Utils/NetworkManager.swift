@@ -52,8 +52,10 @@ public struct NetworkManager<ResponseModel: Decodable> {
         }
         
         if httpMethod != "GET" {
-            // Para POST: agregar extras_epayco con P48 si no existe
-            if httpMethod == "POST" {
+            // Solo agregar extras_epayco para transacciones (NO para Auth)
+            let isAuthEndpoint = self.url.contains("/auth/")
+            
+            if httpMethod == "POST" && !isAuthEndpoint {
                 var encodedData = try? JSONEncoder().encode(requestBody)
                 
                 if let encodedData = encodedData,
@@ -63,18 +65,20 @@ public struct NetworkManager<ResponseModel: Decodable> {
                     if jsonObject["extras_epayco"] == nil {
                         jsonObject["extras_epayco"] = ["extra5": "P48"]
                     }
-                    // Si ya existe, dejarlo como está
                     
                     if let finalData = try? JSONSerialization.data(withJSONObject: jsonObject) {
                         request.httpBody = finalData
-                        // Debug: ver el body que se envía
                         if let bodyString = String(data: finalData, encoding: .utf8) {
                             print("📤 Body enviado: \(bodyString)")
                         }
                     }
                 }
             } else {
+                // Para Auth y otros métodos, solo encodear normalmente
                 request.httpBody = try? JSONEncoder().encode(requestBody)
+                if let body = request.httpBody, let bodyString = String(data: body, encoding: .utf8) {
+                    print("📤 Body enviado: \(bodyString)")
+                }
             }
         }
         
