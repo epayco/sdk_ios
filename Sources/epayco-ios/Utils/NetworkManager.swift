@@ -68,17 +68,11 @@ public struct NetworkManager<ResponseModel: Decodable> {
                     
                     if let finalData = try? JSONSerialization.data(withJSONObject: jsonObject) {
                         request.httpBody = finalData
-                        if let bodyString = String(data: finalData, encoding: .utf8) {
-                            print("📤 Body enviado: \(bodyString)")
-                        }
                     }
                 }
             } else {
                 // Para Auth y otros métodos, solo encodear normalmente
                 request.httpBody = try? JSONEncoder().encode(requestBody)
-                if let body = request.httpBody, let bodyString = String(data: body, encoding: .utf8) {
-                    print("📤 Body enviado: \(bodyString)")
-                }
             }
         }
         
@@ -114,8 +108,6 @@ public struct NetworkManager<ResponseModel: Decodable> {
         }
         
         let statusCode = httpResponse.statusCode
-        
-        print("📡 HTTP Status: \(statusCode) para \(self.url)")
         
         // CASO EXITOSO (200-206)
         if statusCode >= 200 && statusCode <= 206 {
