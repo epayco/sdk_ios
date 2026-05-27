@@ -1,10 +1,16 @@
 import Foundation
 
 public struct NewTokenModel: Encodable {
-    public let card: CardTokenModel
+    public let number: String
+    public let exp_year: String
+    public let exp_month: String
+    public let cvc: String
     
     public init(card: CardTokenModel) {
-        self.card = card
+        self.number = card.number
+        self.exp_year = card.exp_year
+        self.exp_month = card.exp_month
+        self.cvc = card.cvc
     }
 }
 
