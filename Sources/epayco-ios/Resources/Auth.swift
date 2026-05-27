@@ -28,7 +28,7 @@ public struct Auth: NetworkManagerDelegate {
         
         // Debug qué token se obtuvo
         if case .success(let model) = authToken {
-            let tokenUsed = model.bearer_token ?? model.token ?? "No hay token"
+            let tokenUsed = model.bearer_token ?? "No hay token"
             print("✅ Token obtenido: \(tokenUsed.prefix(20))...")
         } else if case .failure(let error) = authToken {
             print("❌ Error: \(error.message)")

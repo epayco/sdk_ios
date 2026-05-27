@@ -67,6 +67,10 @@ public struct NetworkManager<ResponseModel: Decodable> {
                     
                     if let finalData = try? JSONSerialization.data(withJSONObject: jsonObject) {
                         request.httpBody = finalData
+                        // Debug: ver el body que se envía
+                        if let bodyString = String(data: finalData, encoding: .utf8) {
+                            print("📤 Body enviado: \(bodyString)")
+                        }
                     }
                 }
             } else {
