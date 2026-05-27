@@ -26,7 +26,13 @@ public struct Auth: NetworkManagerDelegate {
         let credentials = AuthCredentialsModel(public_key: self.publicKey, private_key: self.privateKey)
         let authToken = networkManager.performRequest(httpMethod: "POST", requestBody: credentials, isAuthRequired: false)
         
-        print("📥 Respuesta Auth: \(authToken)")
+        // Debug qué token se obtuvo
+        if case .success(let model) = authToken {
+            let tokenUsed = model.bearer_token ?? model.token ?? "No hay token"
+            print("✅ Token obtenido: \(tokenUsed.prefix(20))...")
+        } else if case .failure(let error) = authToken {
+            print("❌ Error: \(error.message)")
+        }
 
         return authToken
     }
