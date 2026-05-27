@@ -18,9 +18,15 @@ public struct Auth: NetworkManagerDelegate {
     
     public func authenticate() -> Result<AuthTokenModel, ErrorResponse> {
         let url = K.baseUrlApify + "/login"      
+        
+        print("🔍 Autenticando en: \(url)")
+        print("📦 Credentials: public_key=\(self.publicKey.prefix(10))..., private_key=\(self.privateKey.prefix(10))...")
+        
         let networkManager = NetworkManager<AuthTokenModel>(url, delegate: self)
         let credentials = AuthCredentialsModel(public_key: self.publicKey, private_key: self.privateKey)
         let authToken = networkManager.performRequest(httpMethod: "POST", requestBody: credentials, isAuthRequired: false)
+        
+        print("📥 Respuesta Auth: \(authToken)")
 
         return authToken
     }
