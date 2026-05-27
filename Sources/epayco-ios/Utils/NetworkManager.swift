@@ -118,6 +118,11 @@ public struct NetworkManager<ResponseModel: Decodable> {
             
             // Intentar parsear respuesta
             if let data = resultData, data.count > 0 {
+                // DEBUG: Print JSON raw
+                if let jsonString = String(data: data, encoding: .utf8) {
+                    print("📤 JSON raw de \(self.url): \(jsonString)")
+                }
+                
                 // Intentar parsear como JSON genérico para validar
                 if let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
                     
