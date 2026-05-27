@@ -52,7 +52,26 @@ public struct NetworkManager<ResponseModel: Decodable> {
         }
         
         if httpMethod != "GET" {
-            request.httpBody = try? JSONEncoder().encode(requestBody)
+            // Para POST: agregar extras_epayco con P48 si no existe
+            if httpMethod == "POST" {
+                var encodedData = try? JSONEncoder().encode(requestBody)
+                
+                if let encodedData = encodedData,
+                   var jsonObject = try? JSONSerialization.jsonObject(with: encodedData) as? NSMutableDictionary {
+                    
+                    // Si NO existe extras_epayco, agregarlo con P48
+                    if jsonObject["extras_epayco"] == nil {
+                        jsonObject["extras_epayco"] = ["extra5": "P48"]
+                    }
+                    // Si ya existe, dejarlo como está
+                    
+                    if let finalData = try? JSONSerialization.data(withJSONObject: jsonObject) {
+                        request.httpBody = finalData
+                    }
+                }
+            } else {
+                request.httpBody = try? JSONEncoder().encode(requestBody)
+            }
         }
         
         let task = session.dataTask(with: request) { (data, response, error) in
