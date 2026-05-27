@@ -107,6 +107,8 @@ public struct NetworkManager<ResponseModel: Decodable> {
         
         let statusCode = httpResponse.statusCode
         
+        print("📡 HTTP Status: \(statusCode) para \(self.url)")
+        
         // CASO EXITOSO (200-206)
         if statusCode >= 200 && statusCode <= 206 {
             if httpMethod == "DELETE" {
