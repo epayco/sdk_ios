@@ -51,8 +51,31 @@ public struct ErrorMapper {
         // PRIORIDAD 1: Acceder al objeto "data"
         if let data = json["data"] as? [String: Any] {
             // El "errors" dentro de "data" es el MÁS ESPECÍFICO
-            if let errors = data["errors"] as? String, !errors.isEmpty {
-                return errors  // Retornar el error específico tal cual
+            if let errorsValue = data["errors"] {
+                // Si errors es un string
+                if let errorsString = errorsValue as? String, !errorsString.isEmpty {
+                    return errorsString
+                }
+                
+                // Si errors es un array de diccionarios
+                if let errorsArray = errorsValue as? [[String: Any]] {
+                    var errorMessages: [String] = []
+                    for errorDict in errorsArray {
+                        if let errorMessage = errorDict["errorMessage"] as? String {
+                            errorMessages.append(errorMessage)
+                        } else if let codError = errorDict["codError"] as? String {
+                            errorMessages.append("Error \(codError)")
+                        }
+                    }
+                    if !errorMessages.isEmpty {
+                        return errorMessages.joined(separator: " | ")
+                    }
+                }
+                
+                // Si errors es un array simple
+                if let errorsArray = errorsValue as? [String] {
+                    return errorsArray.joined(separator: " | ")
+                }
             }
             
             // Si no hay "errors", usar "description"
