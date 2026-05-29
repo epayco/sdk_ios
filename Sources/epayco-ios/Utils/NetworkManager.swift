@@ -53,10 +53,13 @@ public struct NetworkManager<ResponseModel: Decodable> {
         
         if httpMethod != "GET" {
             request.httpBody = try? JSONEncoder().encode(requestBody)
-            // Debug: Mostrar el JSON que se envía
+            // Debug: Mostrar el JSON que se envía de forma legible
             if let body = request.httpBody, let jsonString = String(data: body, encoding: .utf8) {
-                print("📤 JSON ENVIADO: \(jsonString)")
+                print("\n📤 ENVIANDO SOLICITUD \(httpMethod) → \(self.url)")
+                print("   Datos: \(jsonString)")
             }
+        } else {
+            print("\n📤 ENVIANDO SOLICITUD \(httpMethod) → \(self.url)")
         }
         
         let task = session.dataTask(with: request) { (data, response, error) in
@@ -110,10 +113,20 @@ public struct NetworkManager<ResponseModel: Decodable> {
                     if let status = jsonObject["status"] as? Bool, !status {
                         let errorMessage = ErrorMapper.extractErrorMessage(from: jsonObject, statusCode: 200)
                         let errorData = ErrorMapper.extractErrorData(from: jsonObject)
-                        // Debug: Mostrar respuesta del servidor con error
-                        if let jsonString = String(data: data, encoding: .utf8) {
-                            print("📨 RESPUESTA DEL SERVIDOR (ERROR): \(jsonString)")
+                        
+                        // Debug: Mostrar respuesta del servidor con error FORMATEADO
+                        print("\n" + String(repeating: "─", count: 60))
+                        print("⚠️  ERROR EN RESPUESTA (Status 200 pero status: false)")
+                        print("─" + String(repeating: "─", count: 59))
+                        print("📝 Mensaje: \(errorMessage)")
+                        if let errorData = errorData {
+                            print("📋 Detalles:")
+                            for (key, value) in errorData {
+                                print("   • \(key): \(value)")
+                            }
                         }
+                        print(String(repeating: "─", count: 60) + "\n")
+                        
                         return .failure(ErrorResponse(
                             status: false,
                             message: errorMessage,
@@ -126,16 +139,18 @@ public struct NetworkManager<ResponseModel: Decodable> {
                 do {
                     let decoded = try JSONDecoder().decode(ResponseModel.self, from: data)
                     // Debug: Mostrar respuesta exitosa
-                    if let jsonString = String(data: data, encoding: .utf8) {
-                        print("✅ RESPUESTA EXITOSA: \(jsonString)")
+                    print("\n✅ RESPUESTA EXITOSA (HTTP \(statusCode))")
+                    if let jsonString = String(data: data, encoding: .utf8), jsonString.count < 500 {
+                        print("   Datos: \(jsonString)")
                     }
                     return .success(decoded)
                 } catch let decodingError {
                     // Debug: Mostrar el JSON recibido para diagnosticar
+                    print("\n❌ ERROR DECODIFICANDO RESPUESTA")
                     if let jsonString = String(data: data, encoding: .utf8) {
-                        print("❌ RESPUESTA NO DECODIFICABLE: \(jsonString)")
+                        print("   JSON recibido: \(jsonString)")
                     }
-                    print("❌ Error de decodificación: \(decodingError)")
+                    print("   Detalle del error: \(decodingError)")
                     return .failure(ErrorResponse(
                         status: false,
                         message: "Error al procesar respuesta del servidor: \(decodingError.localizedDescription)",
@@ -169,30 +184,25 @@ public struct NetworkManager<ResponseModel: Decodable> {
             errorMessage = ErrorMapper.extractErrorMessage(from: responseBody, statusCode: statusCode)
             errorData = ErrorMapper.extractErrorData(from: responseBody)
             
+            // Debug: Mostrar error FORMATEADO
+            print("\n" + String(repeating: "═", count: 60))
+            print("❌ ERROR HTTP \(statusCode)")
+            print("═" + String(repeating: "═", count: 59))
+            print("📝 Mensaje: \(errorMessage)")
+            if let errorData = errorData {
+                print("📋 Detalles:")
+                for (key, value) in errorData {
+                    print("   • \(key): \(value)")
+                }
+            }
+            print("═" + String(repeating: "═", count: 60) + "\n")
+            
             let errorResponse = ErrorResponse(
                 status: false,
                 message: errorMessage,
                 data: errorData,
                 status_code: statusCode
             )
-            
-            // Formatear como JSON para imprimir
-            if let responseBody = responseBody {
-                var jsonDict: [String: Any] = [
-                    "status": false,
-                    "message": errorMessage,
-                    "status_code": statusCode
-                ]
-                
-                if let data = responseBody["data"] as? [String: Any] {
-                    jsonDict["data"] = data
-                }
-                
-                if let jsonData = try? JSONSerialization.data(withJSONObject: jsonDict, options: .prettyPrinted),
-                   let jsonString = String(data: jsonData, encoding: .utf8) {
-                    print("\(jsonString)")
-                }
-            }
             
             return .failure(errorResponse)
         }

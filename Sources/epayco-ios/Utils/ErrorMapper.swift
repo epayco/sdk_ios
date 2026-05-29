@@ -54,10 +54,23 @@ public struct ErrorMapper {
             return errors
         }
         
-        // PRIORIDAD 2: data.errors
+        // PRIORIDAD 2: data.errors (puede ser string o array)
         if let data = json["data"] as? [String: Any] {
             if let errors = data["errors"] as? String, !errors.isEmpty {
                 return errors
+            }
+            
+            // Si errors es un array de strings, unirlos
+            if let errorsArray = data["errors"] as? [String], !errorsArray.isEmpty {
+                return "Errores de validación: " + errorsArray.joined(separator: ", ")
+            }
+            
+            // Si errors es un diccionario con campos específicos
+            if let errorsDict = data["errors"] as? [String: Any], !errorsDict.isEmpty {
+                let fieldErrors = errorsDict.map { key, value in
+                    "\(key): \(value)"
+                }.joined(separator: " | ")
+                return "Validación fallida: " + fieldErrors
             }
             
             if let description = data["description"] as? String, !description.isEmpty {
@@ -73,6 +86,11 @@ public struct ErrorMapper {
         // PRIORIDAD 4: error
         if let error = json["error"] as? String, !error.isEmpty {
             return error
+        }
+        
+        // PRIORIDAD 5: detail (algunos APIs lo usan)
+        if let detail = json["detail"] as? String, !detail.isEmpty {
+            return detail
         }
         
         return mapStatusCodeToMessage(statusCode)
@@ -103,9 +121,16 @@ public struct ErrorMapper {
             } else if let errorsArray = data["errors"] as? [String] {
                 result["errors"] = .string(errorsArray.joined(separator: " | "))
             } else if let errorsDict = data["errors"] as? [String: Any] {
-                let errorStrings = errorsDict.map { "\($0.key): \($0.value)" }
-                result["errors"] = .string(errorStrings.joined(separator: " | "))
+                let errorStrings = errorsDict.map { key, value in
+                    "🔴 \(key): \(value)"
+                }
+                result["errors"] = .string(errorStrings.joined(separator: "\n"))
             }
+        }
+        
+        // También extraer otros campos útiles del nivel superior
+        if let detail = json["detail"] {
+            result["detail"] = .string(String(describing: detail))
         }
         
         return result.isEmpty ? nil : result
