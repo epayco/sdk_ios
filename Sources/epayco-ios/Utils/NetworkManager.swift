@@ -114,18 +114,20 @@ public struct NetworkManager<ResponseModel: Decodable> {
                         let errorMessage = ErrorMapper.extractErrorMessage(from: jsonObject, statusCode: 200)
                         let errorData = ErrorMapper.extractErrorData(from: jsonObject)
                         
-                        // Debug: Mostrar respuesta del servidor con error FORMATEADO
-                        print("\n" + String(repeating: "─", count: 60))
-                        print("⚠️  ERROR EN RESPUESTA (Status 200 pero status: false)")
-                        print("─" + String(repeating: "─", count: 59))
-                        print("📝 Mensaje: \(errorMessage)")
+                        // Debug: Mostrar respuesta del servidor con error FORMATEADO Y DETALLADO
+                        print("\n" + String(repeating: "⚠️", count: 30))
+                        print("⚠️  ERROR EN RESPUESTA (HTTP 200 pero status: false)")
+                        print(String(repeating: "⚠️", count: 30))
+                        print("\n🔴 MENSAJE PRINCIPAL:")
+                        print("   \(errorMessage)")
+                        
                         if let errorData = errorData {
-                            print("📋 Detalles:")
-                            for (key, value) in errorData {
+                            print("\n📋 DETALLES DEL ERROR:")
+                            for (key, value) in errorData.sorted(by: { $0.key < $1.key }) {
                                 print("   • \(key): \(value)")
                             }
                         }
-                        print(String(repeating: "─", count: 60) + "\n")
+                        print("\n" + String(repeating: "⚠️", count: 30) + "\n")
                         
                         return .failure(ErrorResponse(
                             status: false,
@@ -184,18 +186,24 @@ public struct NetworkManager<ResponseModel: Decodable> {
             errorMessage = ErrorMapper.extractErrorMessage(from: responseBody, statusCode: statusCode)
             errorData = ErrorMapper.extractErrorData(from: responseBody)
             
-            // Debug: Mostrar error FORMATEADO
-            print("\n" + String(repeating: "═", count: 60))
+            // Debug: Mostrar error FORMATEADO Y DETALLADO
+            print("\n" + String(repeating: "❌", count: 30))
             print("❌ ERROR HTTP \(statusCode)")
-            print("═" + String(repeating: "═", count: 59))
-            print("📝 Mensaje: \(errorMessage)")
+            print(String(repeating: "❌", count: 30))
+            print("\n🔴 MENSAJE PRINCIPAL:")
+            print("   \(errorMessage)")
+            
             if let errorData = errorData {
-                print("📋 Detalles:")
-                for (key, value) in errorData {
-                    print("   • \(key): \(value)")
+                print("\n📋 DETALLES DEL ERROR:")
+                for (key, value) in errorData.sorted(by: { $0.key < $1.key }) {
+                    if key == "specific_error" {
+                        print("   🎯 ERROR ESPECÍFICO: \(value)")
+                    } else {
+                        print("   • \(key): \(value)")
+                    }
                 }
             }
-            print("═" + String(repeating: "═", count: 60) + "\n")
+            print("\n" + String(repeating: "❌", count: 30) + "\n")
             
             let errorResponse = ErrorResponse(
                 status: false,

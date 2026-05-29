@@ -54,15 +54,16 @@ public struct ErrorMapper {
             return errors
         }
         
-        // PRIORIDAD 2: data.errors (puede ser string o array)
+        // PRIORIDAD 2: data.errors (ESPECÍFICO DE CAMPO - PRIORIDAD ALTA)
         if let data = json["data"] as? [String: Any] {
+            // Errors es el MÁS ESPECÍFICO - error de validación de campo exacto
             if let errors = data["errors"] as? String, !errors.isEmpty {
-                return errors
+                return "❌ " + errors  // Error específico del campo
             }
             
             // Si errors es un array de strings, unirlos
             if let errorsArray = data["errors"] as? [String], !errorsArray.isEmpty {
-                return "Errores de validación: " + errorsArray.joined(separator: ", ")
+                return "❌ Errores: " + errorsArray.joined(separator: " | ")
             }
             
             // Si errors es un diccionario con campos específicos
@@ -70,25 +71,28 @@ public struct ErrorMapper {
                 let fieldErrors = errorsDict.map { key, value in
                     "\(key): \(value)"
                 }.joined(separator: " | ")
-                return "Validación fallida: " + fieldErrors
+                return "❌ Validación fallida: " + fieldErrors
             }
-            
+        }
+        
+        // PRIORIDAD 3: data.description (descripción general del error)
+        if let data = json["data"] as? [String: Any] {
             if let description = data["description"] as? String, !description.isEmpty {
                 return description
             }
         }
         
-        // PRIORIDAD 3: message principal
+        // PRIORIDAD 4: message principal
         if let message = json["message"] as? String, !message.isEmpty {
             return message
         }
         
-        // PRIORIDAD 4: error
+        // PRIORIDAD 5: error
         if let error = json["error"] as? String, !error.isEmpty {
             return error
         }
         
-        // PRIORIDAD 5: detail (algunos APIs lo usan)
+        // PRIORIDAD 6: detail (algunos APIs lo usan)
         if let detail = json["detail"] as? String, !detail.isEmpty {
             return detail
         }
@@ -97,7 +101,7 @@ public struct ErrorMapper {
     }
     
     /// Extrae datos adicionales del error desde el JSON
-    /// Devuelve un diccionario con status, description y errors
+    /// Devuelve un diccionario con todos los detalles del error
     public static func extractErrorData(from jsonData: [String: Any]?) -> [String: AnyCodable]? {
         guard let json = jsonData else { return nil }
         
@@ -105,26 +109,26 @@ public struct ErrorMapper {
         
         // Obtener el objeto "data" que contiene los detalles
         if let data = json["data"] as? [String: Any] {
-            // Incluir status si existe
+            // 1. Incluir status si existe
             if let status = data["status"] {
                 result["status"] = .string(String(describing: status))
             }
             
-            // Incluir description si existe
+            // 2. Incluir description (descripción general del error)
             if let description = data["description"] as? String, !description.isEmpty {
                 result["description"] = .string(description)
             }
             
-            // Incluir errors en cualquier formato (string, array, dict)
+            // 3. Incluir errors en CUALQUIER formato (es lo MÁS IMPORTANTE)
             if let errors = data["errors"] as? String, !errors.isEmpty {
-                result["errors"] = .string(errors)
-            } else if let errorsArray = data["errors"] as? [String] {
-                result["errors"] = .string(errorsArray.joined(separator: " | "))
-            } else if let errorsDict = data["errors"] as? [String: Any] {
+                result["specific_error"] = .string(errors)  // El error específico
+            } else if let errorsArray = data["errors"] as? [String], !errorsArray.isEmpty {
+                result["specific_error"] = .string(errorsArray.joined(separator: " | "))
+            } else if let errorsDict = data["errors"] as? [String: Any], !errorsDict.isEmpty {
                 let errorStrings = errorsDict.map { key, value in
-                    "🔴 \(key): \(value)"
+                    "\(key): \(value)"
                 }
-                result["errors"] = .string(errorStrings.joined(separator: "\n"))
+                result["specific_error"] = .string(errorStrings.joined(separator: " | "))
             }
         }
         
