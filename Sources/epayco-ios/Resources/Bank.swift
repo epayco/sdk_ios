@@ -34,8 +34,7 @@ public struct Bank: NetworkManagerDelegate {
         extra10: nil
     )
 
-
-    let url = K.baseUrlSecure + K.entorno + "/pagos/debitos.json"
+    let url = K.baseUrlSecure + "/restpagos/pagos/debitos.json"
     let networkManager = NetworkManager<BankTransactionModel>(url, delegate: self)
     let bankCreateData = NewBankTransactionCallModel(
         banco: aes128?.encrypt(string: newBankTransactionData.bank)?.base64EncodedString(),
@@ -74,9 +73,9 @@ public struct Bank: NetworkManagerDelegate {
     // Imprimir el JSON antes de enviar la solicitud para depuración
     if let jsonData = try? JSONEncoder().encode(bankCreateData),
        let jsonString = String(data: jsonData, encoding: .utf8) {
-        print("\n JSON enviado a la API REST:\n", jsonString)
+        print("\n📤 JSON enviado a la API REST:\n", jsonString)
     } else {
-        print("\n Error al serializar bankCreateData a JSON")
+        print("\n⚠️ Error al serializar bankCreateData a JSON")
     }
 
     let newTransaction = networkManager.performRequest(httpMethod: "POST", requestBody: bankCreateData)
@@ -88,7 +87,7 @@ public struct Bank: NetworkManagerDelegate {
 
         let extrasEpayco = newBankTransactionData.extras_epayco ?? ExtrasModel()
 
-        let url = K.baseUrlSecure + K.entorno + "/pagos/debitos.json"
+        let url = K.baseUrlSecure + "/restpagos/pagos/debitos.json"
         let networkManager = NetworkManager<BankTransactionModel>(url, delegate: self)
         let bankCreateData = NewBankTransactionSplitCallModel(
             banco: aes128?.encrypt(string: newBankTransactionData.bank)?.base64EncodedString(),
@@ -137,7 +136,7 @@ public struct Bank: NetworkManagerDelegate {
     }
     
     public func getTransaction(transactionId: String) -> Result<BankTransactionGetModel, ErrorResponse> {
-        let url = K.baseUrlSecure + K.entorno + "/pse/transactioninfomation.json?transactionID=" + transactionId + "&public_key=" + self.publicKey
+        let url = K.baseUrlSecure + "/restpagos/pse/transactioninfomation.json?transactionID=" + transactionId + "&public_key=" + self.publicKey
         let networkManager = NetworkManager<BankTransactionGetModel>(url, delegate: self)
         let foundTransaction = networkManager.performRequest(httpMethod: "GET", requestBody: "")
         
@@ -145,7 +144,7 @@ public struct Bank: NetworkManagerDelegate {
     }
     
     public func getBanksList() -> Result<BankInfoModel, ErrorResponse> {
-        let url = K.baseUrlSecure + K.entorno + "/pse/bancos.json?public_key=" + self.publicKey
+        let url = K.baseUrlSecure + "/restpagos/pse/bancos.json?public_key=" + self.publicKey
         let networkManager = NetworkManager<BankInfoModel>(url, delegate: self)
         let foundBanks = networkManager.performRequest(httpMethod: "GET", requestBody: "")
         

@@ -25,7 +25,7 @@ public struct Cash: NetworkManagerDelegate {
         extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
         )
 
-        let url = K.baseUrlSecure + K.entorno + "/v2/efectivo/" + paymentMethod
+        let url = K.baseUrlSecure + "/restpagos/v2/efectivo/" + paymentMethod
         let networkManager = NetworkManager<CashTransactionModel>(url, delegate: self)
         let cashCreateData = NewCashTransactionCallModel(
             factura: newCashTransactionData.invoice,
@@ -62,7 +62,7 @@ public struct Cash: NetworkManagerDelegate {
             extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
         )
 
-        let url = K.baseUrlSecure + K.entorno + "/v2/efectivo/" + paymentMethod
+        let url = K.baseUrlSecure + "/restpagos/v2/efectivo/" + paymentMethod
         let networkManager = NetworkManager<CashTransactionModel>(url, delegate: self)
         let cashCreateData = NewCashTransactionSplitCallModel(
             factura: newCashTransactionData.invoice,
@@ -102,7 +102,7 @@ public struct Cash: NetworkManagerDelegate {
     }
     
     public func getTransaction(refPayco: String) -> Result<CashTransactionModel, ErrorResponse> {
-        let url = K.baseUrlSecure + K.entorno + "/transaction/response.json?ref_payco=" + refPayco + "&public_key=" + self.publicKey
+        let url = K.baseUrlSecure + "/restpagos/transaction/response.json?ref_payco=" + refPayco + "&public_key=" + self.publicKey
         let networkManager = NetworkManager<CashTransactionModel>(url, delegate: self)
         let foundTransaction = networkManager.performRequest(httpMethod: "GET", requestBody: "")
         

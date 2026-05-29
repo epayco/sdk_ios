@@ -121,7 +121,7 @@ public struct Charge: NetworkManagerDelegate {
     public func getTransaction(refPayco: String) 
         -> Result<ChargeTransactionGetModel, ErrorResponse> {
         
-        let url = K.baseUrlSecure + K.entorno + "/transaction/response.json?ref_payco=" + refPayco + "&public_key=" + self.publicKey
+        let url = K.baseUrlSecure + "/restpagos/transaction/response.json?ref_payco=" + refPayco + "&public_key=" + self.publicKey
         let networkManager = NetworkManager<ChargeTransactionGetModel>(url, delegate: self)
         let result = networkManager.performRequest(httpMethod: "GET", requestBody: "")
         

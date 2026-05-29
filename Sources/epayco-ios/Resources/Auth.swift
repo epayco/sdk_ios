@@ -21,6 +21,7 @@ public struct Auth: NetworkManagerDelegate {
         let networkManager = NetworkManager<AuthTokenModel>(url, delegate: self)
         let credentials = AuthCredentialsModel(public_key: self.publicKey, private_key: self.privateKey)
         let authToken = networkManager.performRequest(httpMethod: "POST", requestBody: credentials, isAuthRequired: false)
+
         return authToken
     }
 }
