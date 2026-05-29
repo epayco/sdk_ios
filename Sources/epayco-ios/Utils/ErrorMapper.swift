@@ -39,8 +39,7 @@ public struct ErrorMapper {
     }
     
     /// Extrae el mensaje de error del JSON response
-    /// Intenta múltiples formatos comunes de respuesta de API
-    /// Retorna solo el mensaje principal, los detalles están en extractErrorData()
+    /// Accede correctamente al objeto "data" que contiene los detalles
     public static func extractErrorMessage(
         from jsonData: [String: Any]?,
         statusCode: Int
@@ -49,92 +48,53 @@ public struct ErrorMapper {
             return mapStatusCodeToMessage(statusCode)
         }
         
-        // PRIORIDAD 1: errors al nivel superior
-        if let errors = json["errors"] as? String, !errors.isEmpty {
-            return errors
-        }
-        
-        // PRIORIDAD 2: data.errors (ESPECÍFICO DE CAMPO - PRIORIDAD ALTA)
+        // PRIORIDAD 1: Acceder al objeto "data"
         if let data = json["data"] as? [String: Any] {
-            // Errors es el MÁS ESPECÍFICO - error de validación de campo exacto
+            // El "errors" dentro de "data" es el MÁS ESPECÍFICO
             if let errors = data["errors"] as? String, !errors.isEmpty {
-                return "❌ " + errors  // Error específico del campo
+                return errors  // Retornar el error específico tal cual
             }
             
-            // Si errors es un array de strings, unirlos
-            if let errorsArray = data["errors"] as? [String], !errorsArray.isEmpty {
-                return "❌ Errores: " + errorsArray.joined(separator: " | ")
-            }
-            
-            // Si errors es un diccionario con campos específicos
-            if let errorsDict = data["errors"] as? [String: Any], !errorsDict.isEmpty {
-                let fieldErrors = errorsDict.map { key, value in
-                    "\(key): \(value)"
-                }.joined(separator: " | ")
-                return "❌ Validación fallida: " + fieldErrors
-            }
-        }
-        
-        // PRIORIDAD 3: data.description (descripción general del error)
-        if let data = json["data"] as? [String: Any] {
+            // Si no hay "errors", usar "description"
             if let description = data["description"] as? String, !description.isEmpty {
                 return description
             }
         }
         
-        // PRIORIDAD 4: message principal
+        // PRIORIDAD 2: errors al nivel superior
+        if let errors = json["errors"] as? String, !errors.isEmpty {
+            return errors
+        }
+        
+        // PRIORIDAD 3: message principal
         if let message = json["message"] as? String, !message.isEmpty {
             return message
-        }
-        
-        // PRIORIDAD 5: error
-        if let error = json["error"] as? String, !error.isEmpty {
-            return error
-        }
-        
-        // PRIORIDAD 6: detail (algunos APIs lo usan)
-        if let detail = json["detail"] as? String, !detail.isEmpty {
-            return detail
         }
         
         return mapStatusCodeToMessage(statusCode)
     }
     
     /// Extrae datos adicionales del error desde el JSON
-    /// Devuelve un diccionario con todos los detalles del error
+    /// Accede al objeto "data" y extrae todos sus valores
     public static func extractErrorData(from jsonData: [String: Any]?) -> [String: AnyCodable]? {
         guard let json = jsonData else { return nil }
         
         var result: [String: AnyCodable] = [:]
         
-        // Obtener el objeto "data" que contiene los detalles
+        // Acceder al objeto "data"
         if let data = json["data"] as? [String: Any] {
-            // 1. Incluir status si existe
-            if let status = data["status"] {
-                result["status"] = .string(String(describing: status))
-            }
-            
-            // 2. Incluir description (descripción general del error)
-            if let description = data["description"] as? String, !description.isEmpty {
-                result["description"] = .string(description)
-            }
-            
-            // 3. Incluir errors en CUALQUIER formato (es lo MÁS IMPORTANTE)
-            if let errors = data["errors"] as? String, !errors.isEmpty {
-                result["specific_error"] = .string(errors)  // El error específico
-            } else if let errorsArray = data["errors"] as? [String], !errorsArray.isEmpty {
-                result["specific_error"] = .string(errorsArray.joined(separator: " | "))
-            } else if let errorsDict = data["errors"] as? [String: Any], !errorsDict.isEmpty {
-                let errorStrings = errorsDict.map { key, value in
-                    "\(key): \(value)"
+            // Extraer cada valor de "data" directamente
+            for (key, value) in data {
+                if let stringValue = value as? String {
+                    result[key] = .string(stringValue)
+                } else if let boolValue = value as? Bool {
+                    result[key] = .bool(boolValue)
+                } else if let intValue = value as? Int {
+                    result[key] = .int(intValue)
+                } else {
+                    result[key] = .string(String(describing: value))
                 }
-                result["specific_error"] = .string(errorStrings.joined(separator: " | "))
             }
-        }
-        
-        // También extraer otros campos útiles del nivel superior
-        if let detail = json["detail"] {
-            result["detail"] = .string(String(describing: detail))
         }
         
         return result.isEmpty ? nil : result
