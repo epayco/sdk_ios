@@ -126,6 +126,11 @@ public struct NetworkManager<ResponseModel: Decodable> {
                 
                 do {
                     let decoded = try JSONDecoder().decode(ResponseModel.self, from: data)
+                    // Imprimir respuesta exitosa en JSON bonito
+                    if let jsonData = try? JSONSerialization.data(withJSONObject: try? JSONSerialization.jsonObject(with: data), options: .prettyPrinted),
+                       let jsonString = String(data: jsonData, encoding: .utf8) {
+                        print(jsonString)
+                    }
                     return .success(decoded)
                 } catch let decodingError {
                     // Debug: Error de decodificación
