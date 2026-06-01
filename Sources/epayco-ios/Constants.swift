@@ -1,4 +1,7 @@
- // URLs base - soportan variables de entorno
+import Foundation
+
+public struct K {
+   // URLs base - soportan variables de entorno
     public static var urlBase: String {
         ProcessInfo.processInfo.environment["BASE_URL_SDK"] ?? "https://api.secure.payco.co"
     }
