@@ -112,7 +112,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
                         // Debug: Imprimir en JSON
                         if let jsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted),
                            let jsonString = String(data: jsonData, encoding: .utf8) {
-                            print("\nError Response:\n\(jsonString)")
+                            print(jsonString)
                         }
                         
                         return .failure(ErrorResponse(
