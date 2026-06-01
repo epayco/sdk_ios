@@ -55,12 +55,6 @@ public struct NetworkManager<ResponseModel: Decodable> {
         
         if httpMethod != "GET" {
             request.httpBody = try? JSONEncoder().encode(requestBody)
-            // Debug: Mostrar el JSON que se envía
-            if let body = request.httpBody, let jsonString = String(data: body, encoding: .utf8) {
-                if let jsonData = try? JSONSerialization.data(withJSONObject: try? JSONSerialization.jsonObject(with: body), options: .prettyPrinted),
-                   let formatted = String(data: jsonData, encoding: .utf8) {
-                }
-            }
         }
         
         let task = session.dataTask(with: request) { (data, response, error) in
@@ -132,10 +126,6 @@ public struct NetworkManager<ResponseModel: Decodable> {
                 
                 do {
                     let decoded = try JSONDecoder().decode(ResponseModel.self, from: data)
-                    // Debug: Mostrar respuesta en JSON
-                    if let jsonString = String(data: data, encoding: .utf8), jsonString.count < 1000 {
-                        print("(jsonString)")
-                    }
                     return .success(decoded)
                 } catch let decodingError {
                     // Debug: Error de decodificación
@@ -174,11 +164,11 @@ public struct NetworkManager<ResponseModel: Decodable> {
             errorMessage = ErrorMapper.extractErrorMessage(from: responseBody, statusCode: statusCode)
             errorData = ErrorMapper.extractErrorData(from: responseBody)
             
-            // Debug: Imprimir en JSON
+            // Imprimir solo el JSON del error
             if let responseBody = responseBody {
                 if let jsonData = try? JSONSerialization.data(withJSONObject: responseBody, options: .prettyPrinted),
                    let jsonString = String(data: jsonData, encoding: .utf8) {
-                    print("\nError Response (HTTP \(statusCode)):\n\(jsonString)")
+                    print(jsonString)
                 }
             }
             
