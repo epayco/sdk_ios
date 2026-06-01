@@ -59,7 +59,6 @@ public struct NetworkManager<ResponseModel: Decodable> {
             if let body = request.httpBody, let jsonString = String(data: body, encoding: .utf8) {
                 if let jsonData = try? JSONSerialization.data(withJSONObject: try? JSONSerialization.jsonObject(with: body), options: .prettyPrinted),
                    let formatted = String(data: jsonData, encoding: .utf8) {
-                    print("\nRequest: \(httpMethod) \(self.url)\n\(formatted)")
                 }
             }
         }
@@ -135,13 +134,12 @@ public struct NetworkManager<ResponseModel: Decodable> {
                     let decoded = try JSONDecoder().decode(ResponseModel.self, from: data)
                     // Debug: Mostrar respuesta en JSON
                     if let jsonString = String(data: data, encoding: .utf8), jsonString.count < 1000 {
-                        print("\nResponse: Success\n\(jsonString)")
+                        print("(jsonString)")
                     }
                     return .success(decoded)
                 } catch let decodingError {
                     // Debug: Error de decodificación
                     if let jsonString = String(data: data, encoding: .utf8) {
-                        print("\nError: Decode Error\n\(jsonString)\n\(decodingError)")
                     }
                     return .failure(ErrorResponse(
                         status: false,
