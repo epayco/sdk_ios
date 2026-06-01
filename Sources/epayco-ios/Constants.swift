@@ -1,7 +1,7 @@
 import Foundation
 
 public struct K {
-   // URLs base - soportan variables de entorno
+    // URLs base - soportan variables de entorno
     public static var urlBase: String {
         ProcessInfo.processInfo.environment["BASE_URL_SDK"] ?? "https://api.secure.payco.co"
     }
@@ -17,3 +17,4 @@ public struct K {
     public static var baseUrlApify: String {
         ProcessInfo.processInfo.environment["BASE_URL_APIFY"] ?? "https://apify.epayco.co"
     }
+}
