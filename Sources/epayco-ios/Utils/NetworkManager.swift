@@ -124,16 +124,16 @@ public struct NetworkManager<ResponseModel: Decodable> {
                     }
                 }
                 
+                // Guardar respuesta cruda primero
+                let responseString = String(data: data, encoding: .utf8) ?? "No se pudo decodificar"
+                
+                // IMPRIMIR RESPUESTA
+                print("📨 Respuesta del servidor:")
+                print(responseString)
+                print("---")
+                
                 do {
-                    // Guardar respuesta cruda primero
-                    let responseString = String(data: data, encoding: .utf8) ?? "No se pudo decodificar"
-                    
-                    // Luego decodificar
                     let decoded = try JSONDecoder().decode(ResponseModel.self, from: data)
-                    
-                    // Imprimir respuesta exacta del servidor
-                    print(responseString)
-                    
                     return .success(decoded)
                 } catch let decodingError {
                     return .failure(ErrorResponse(
