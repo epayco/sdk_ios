@@ -132,19 +132,12 @@ public struct NetworkManager<ResponseModel: Decodable> {
                         print(jsonString)
                     }
                     return .success(decoded)
-                } catch let decodingError {
-                    // Debug: Error de decodificación - mostrar respuesta cruda
+                } catch {
                     if let jsonString = String(data: data, encoding: .utf8) {
-                         print("Respuesta del servidor:")
+                        print("Respuesta del servidor:")
                         print(jsonString)     
                         print("---")
                     }
-                    return .failure(ErrorResponse(
-                        status: false,
-                        message: "",
-                        data: nil,
-                        status_code: statusCode
-                    ))
                 }
             }
            
