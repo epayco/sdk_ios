@@ -1,11 +1,11 @@
 import Foundation
 
 public struct BankTransactionModel: Codable {
-    public let success: Bool
-    public let title_response: String
-    public let text_response: String
-    public let last_action: String
-    public let data: BankTransactionDataModel
+    public let success: Bool?
+    public let title_response: String?
+    public let text_response: String?
+    public let last_action: String?
+    public let data: BankTransactionDataModel?
 }
 
 public struct BankTransactionDataModel: Codable {
