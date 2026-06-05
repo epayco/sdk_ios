@@ -142,12 +142,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
                    
                 }
             }
-            return .failure(ErrorResponse(
-                status: false,
-                message: "Respuesta vacía del servidor",
-                data: nil,
-                status_code: statusCode
-            ))
+           
         }
         
         // CASO ERROR (400-599)
