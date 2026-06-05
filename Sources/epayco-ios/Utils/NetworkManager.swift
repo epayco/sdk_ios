@@ -135,7 +135,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
                 } catch let decodingError {
                     // Debug: Error de decodificación - mostrar respuesta cruda
                     if let jsonString = String(data: data, encoding: .utf8) {
-                        print("❌ ERROR DE DECODIFICACIÓN")
+                   
                         print("Respuesta del servidor:")
                         print(jsonString)
                         print("Error: \(decodingError)")
