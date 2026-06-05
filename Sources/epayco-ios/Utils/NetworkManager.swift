@@ -179,14 +179,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
             
             return .failure(errorResponse)
         }
-        
-        // Caso inesperado
-        return .failure(ErrorResponse(
-            status: false,
-            message: "Respuesta inesperada del servidor",
-            data: nil,
-            status_code: statusCode
-        ))
+       
     }
     
     
