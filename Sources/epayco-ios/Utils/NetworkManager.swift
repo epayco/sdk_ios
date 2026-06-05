@@ -135,23 +135,11 @@ public struct NetworkManager<ResponseModel: Decodable> {
                 } catch let decodingError {
                     // Debug: Error de decodificación - mostrar respuesta cruda
                     if let jsonString = String(data: data, encoding: .utf8) {
-                        print("❌ ERROR DE DECODIFICACIÓN")
-                        print("URL: \(self.url)")
-                        print("Respuesta del servidor:")
-                        print(jsonString)
-                        if let decodingError = decodingError as? DecodingError {
-                            print("Tipo de error: \(decodingError)")
-                        } else {
-                            print("Error: \(decodingError)")
-                        }
+                         print("Respuesta del servidor:")
+                        print(jsonString)     
                         print("---")
                     }
-                    return .failure(ErrorResponse(
-                        status: false,
-                        message: "Error al procesar respuesta del servidor: \(decodingError.localizedDescription)",
-                        data: nil,
-                        status_code: statusCode
-                    ))
+                   
                 }
             }
             return .failure(ErrorResponse(
