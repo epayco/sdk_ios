@@ -125,20 +125,17 @@ public struct NetworkManager<ResponseModel: Decodable> {
                 }
                 
                 do {
+                    // Guardar respuesta cruda primero
+                    let responseString = String(data: data, encoding: .utf8) ?? "No se pudo decodificar"
+                    
+                    // Luego decodificar
                     let decoded = try JSONDecoder().decode(ResponseModel.self, from: data)
-                    // Imprimir respuesta exitosa en JSON bonito
-                    if let jsonData = try? JSONSerialization.data(withJSONObject: try? JSONSerialization.jsonObject(with: data), options: .prettyPrinted),
-                       let jsonString = String(data: jsonData, encoding: .utf8) {
-                        print(jsonString)
-                    }
+                    
+                    // Imprimir respuesta exacta del servidor
+                    print(responseString)
+                    
                     return .success(decoded)
                 } catch let decodingError {
-                    // Debug: Error de decodificación - mostrar respuesta cruda
-                    if let jsonString = String(data: data, encoding: .utf8) {                   
-                        print("Respuesta del servidor:")
-                        print(jsonString)
-                       
-                    }
                     return .failure(ErrorResponse(
                         status: false,
                         message: "Error al procesar respuesta del servidor: \(decodingError.localizedDescription)",
