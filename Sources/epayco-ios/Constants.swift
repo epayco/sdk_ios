@@ -3,11 +3,11 @@ import Foundation
 public struct K {
     // URLs base - soportan variables de entorno
     public static var urlBase: String {
-        ProcessInfo.processInfo.environment["BASE_URL_SDK"] ?? "https://api.secure.payco.co"
+        ProcessInfo.processInfo.environment["BASE_URL_SDK"] ?? "https://eks-subscription-api-lumen-service.epayco.io"
     }
     
     public static var baseUrlSecure: String {
-        ProcessInfo.processInfo.environment["SECURE_URL_SDK"] ?? "https://secure.payco.co"
+        ProcessInfo.processInfo.environment["SECURE_URL_SDK"] ?? "https://eks-rest-pagos-service.epayco.io"
     }
     
     public static var entorno: String {
@@ -15,6 +15,6 @@ public struct K {
     }
     
     public static var baseUrlApify: String {
-        ProcessInfo.processInfo.environment["BASE_URL_APIFY"] ?? "https://apify.epayco.co"
+        ProcessInfo.processInfo.environment["BASE_URL_APIFY"] ?? "https://eks-apify-service.epayco.io"
     }
 }
