@@ -138,8 +138,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
                    
                         print("Respuesta del servidor:")
                         print(jsonString)
-                        print("Error: \(decodingError)")
-                        print("---")
+                        
                     }
                     return .failure(ErrorResponse(
                         status: false,
