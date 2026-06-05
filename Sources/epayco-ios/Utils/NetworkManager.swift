@@ -138,6 +138,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
                          print("Respuesta del servidor:")
                         print(jsonString)     
                         print("---")
+                        
                     }
                     return .failure(ErrorResponse(
                         status: false,
@@ -182,7 +183,13 @@ public struct NetworkManager<ResponseModel: Decodable> {
                 status_code: statusCode
             )
         }
-       
+        
+        return .failure(ErrorResponse(
+            status: false,
+            message: "Respuesta inesperada del servidor",
+            data: nil,
+            status_code: 0
+        ))
     }
     
     
