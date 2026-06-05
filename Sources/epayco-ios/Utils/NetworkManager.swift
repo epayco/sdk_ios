@@ -124,20 +124,35 @@ public struct NetworkManager<ResponseModel: Decodable> {
                     }
                 }
                 
-                // Guardar respuesta cruda primero
-                let responseString = String(data: data, encoding: .utf8) ?? "No se pudo decodificar"
-                
-                // IMPRIMIR RESPUESTA
-                print("Respuesta del servidor:")
-                print(responseString)
-                print("---")
-                
-                return .failure(ErrorResponse(
-                    status: false,
-                    message: "",
-                    data: nil,
-                    status_code: statusCode
-                ))
+                do {
+                    let decoded = try JSONDecoder().decode(ResponseModel.self, from: data)
+                    // Imprimir respuesta exitosa en JSON bonito
+                    if let jsonData = try? JSONSerialization.data(withJSONObject: try? JSONSerialization.jsonObject(with: data), options: .prettyPrinted),
+                       let jsonString = String(data: jsonData, encoding: .utf8) {
+                        print(jsonString)
+                    }
+                    return .success(decoded)
+                } catch let decodingError {
+                    // Debug: Error de decodificación - mostrar respuesta cruda
+                    if let jsonString = String(data: data, encoding: .utf8) {
+                        print("❌ ERROR DE DECODIFICACIÓN")
+                        print("URL: \(self.url)")
+                        print("Respuesta del servidor:")
+                        print(jsonString)
+                        if let decodingError = decodingError as? DecodingError {
+                            print("Tipo de error: \(decodingError)")
+                        } else {
+                            print("Error: \(decodingError)")
+                        }
+                        print("---")
+                    }
+                    return .failure(ErrorResponse(
+                        status: false,
+                        message: "Error al procesar respuesta del servidor: \(decodingError.localizedDescription)",
+                        data: nil,
+                        status_code: statusCode
+                    ))
+                }
             }
             return .failure(ErrorResponse(
                 status: false,
