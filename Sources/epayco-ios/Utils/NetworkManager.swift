@@ -138,11 +138,10 @@ public struct NetworkManager<ResponseModel: Decodable> {
                          print("Respuesta del servidor:")
                         print(jsonString)     
                         print("---")
-                        
                     }
                     return .failure(ErrorResponse(
                         status: false,
-                        message: "Error al procesar respuesta del servidor: \(decodingError.localizedDescription)",
+                        message: "",
                         data: nil,
                         status_code: statusCode
                     ))
