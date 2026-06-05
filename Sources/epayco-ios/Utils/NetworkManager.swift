@@ -181,8 +181,6 @@ public struct NetworkManager<ResponseModel: Decodable> {
                 data: errorData,
                 status_code: statusCode
             )
-            
-            return .failure(errorResponse)
         }
        
     }
