@@ -128,7 +128,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
                 let responseString = String(data: data, encoding: .utf8) ?? "No se pudo decodificar"
                 
                 // IMPRIMIR RESPUESTA
-                print("📨 Respuesta del servidor:")
+                print("Respuesta del servidor:")
                 print(responseString)
                 print("---")
                 
