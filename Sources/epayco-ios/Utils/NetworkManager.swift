@@ -127,18 +127,17 @@ public struct NetworkManager<ResponseModel: Decodable> {
                 // Guardar respuesta cruda primero
                 let responseString = String(data: data, encoding: .utf8) ?? "No se pudo decodificar"
                 
-                // IMPRIMIR RESPUESTA FORMATEADA
-                print("📨 Respuesta del servidor:")
-                if let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                   let jsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: .prettyPrinted),
-                   let prettyJson = String(data: jsonData, encoding: .utf8) {
-                    print(prettyJson)
-                } else {
-                    print(responseString)
-                }
+                // IMPRIMIR RESPUESTA
+                print("Respuesta del servidor:")
+                print(responseString)
                 print("---")
                 
-               
+                return .failure(ErrorResponse(
+                    status: false,
+                    message: "",
+                    data: nil,
+                    status_code: statusCode
+                ))
             }
             return .failure(ErrorResponse(
                 status: false,
