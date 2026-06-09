@@ -22,6 +22,7 @@ public struct Cash: NetworkManagerDelegate {
         
         let extrasEpayco = newCashTransactionData.extras_epayco ?? ExtrasModel(
         extra1: nil, extra2: nil, extra3: nil, extra4: nil,
+        extra5: "P48",
         extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
         )
 
@@ -59,6 +60,7 @@ public struct Cash: NetworkManagerDelegate {
         
         let extrasEpayco = newCashTransactionData.extras_epayco ?? ExtrasModel(
             extra1: nil, extra2: nil, extra3: nil, extra4: nil,
+            extra5: "P48",
             extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
         )
 
