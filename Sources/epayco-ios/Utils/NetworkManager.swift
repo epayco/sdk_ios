@@ -179,7 +179,7 @@ public struct NetworkManager<ResponseModel: Decodable> {
             status: false,
             message: "Respuesta inesperada del servidor",
             data: nil,
-            status_code: 0
+            status_code: statusCode
         ))
     }
     
