@@ -132,24 +132,14 @@ public struct NetworkManager<ResponseModel: Decodable> {
                         print(jsonString)
                     }
                     return .success(decoded)
-                } catch let decodingError {
-                    // Debug: Error de decodificación
+                } catch {
                     if let jsonString = String(data: data, encoding: .utf8) {
+                        print(jsonString)     
+                        print("---")
                     }
-                    return .failure(ErrorResponse(
-                        status: false,
-                        message: "Error al procesar respuesta del servidor: \(decodingError.localizedDescription)",
-                        data: nil,
-                        status_code: statusCode
-                    ))
                 }
             }
-            return .failure(ErrorResponse(
-                status: false,
-                message: "Respuesta vacía del servidor",
-                data: nil,
-                status_code: statusCode
-            ))
+           
         }
         
         // CASO ERROR (400-599)
@@ -183,11 +173,8 @@ public struct NetworkManager<ResponseModel: Decodable> {
                 data: errorData,
                 status_code: statusCode
             )
-            
-            return .failure(errorResponse)
         }
         
-        // Caso inesperado
         return .failure(ErrorResponse(
             status: false,
             message: "Respuesta inesperada del servidor",
