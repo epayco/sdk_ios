@@ -16,7 +16,7 @@ public struct Auth: NetworkManagerDelegate {
         self.privateKey = privateKey
     }
     
-    public func authenticate() -> AuthTokenModel? {
+    public func authenticate() -> Result<AuthTokenModel, ErrorResponse> {
         let url = K.urlBase + "/v1/auth/login"
         let networkManager = NetworkManager<AuthTokenModel>(url, delegate: self)
         let credentials = AuthCredentialsModel(public_key: self.publicKey, private_key: self.privateKey)

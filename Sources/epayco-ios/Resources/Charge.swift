@@ -16,54 +16,69 @@ public struct Charge: NetworkManagerDelegate {
         self.privateKey = privateKey
     }
     
-   
-   public func create(newChargeTransactionData: NewChargeTransactionModel) -> ChargeTransactionModel? {
-    // Si el usuario no envía extras_epayco, lo agregamos automáticamente
-    let extrasEpayco = newChargeTransactionData.extras_epayco ?? ExtrasModel(
-        extra1: nil, extra2: nil, extra3: nil, extra4: nil,
-        extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
-    )
+    /// Crea una nueva transacción de carga/pago
+    /// - Parameter newChargeTransactionData: Datos de la transacción
+    /// - Returns: Result con transacción exitosa o error detallado
+    public func create(newChargeTransactionData: NewChargeTransactionModel) 
+        -> Result<ChargeTransactionModel, ErrorResponse> {
+        
+        // Si el usuario no envía extras_epayco, lo agregamos automáticamente
+        let extrasEpayco = newChargeTransactionData.extras_epayco ?? ExtrasModel(
+            extra1: nil, extra2: nil, extra3: nil, extra4: nil,
+            extra5: "P48",
+            extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
+        )
 
-    // Creamos una copia del modelo con el campo extras_epayco seguro
-    let dataWithExtras = NewChargeTransactionModel(
-        token_card: newChargeTransactionData.token_card,
-        customer_id: newChargeTransactionData.customer_id,
-        doc_type: newChargeTransactionData.doc_type,
-        doc_number: newChargeTransactionData.doc_number,
-        name: newChargeTransactionData.name,
-        last_name: newChargeTransactionData.last_name,
-        email: newChargeTransactionData.email,
-        bill: newChargeTransactionData.bill,
-        description: newChargeTransactionData.description,
-        value: newChargeTransactionData.value,
-        tax: newChargeTransactionData.tax,
-        tax_base: newChargeTransactionData.tax_base,
-        currency: newChargeTransactionData.currency,
-        dues: newChargeTransactionData.dues,
-        address: newChargeTransactionData.address,
-        phone: newChargeTransactionData.phone,
-        cell_phone: newChargeTransactionData.cell_phone,
-        url_response: newChargeTransactionData.url_response,
-        url_confirmation: newChargeTransactionData.url_confirmation,
-        ip: newChargeTransactionData.ip,
-        extras: newChargeTransactionData.extras,
-        extras_epayco: extrasEpayco // <-- Aquí siempre va el objeto con extra5: "P48"
-    )
+        // Creamos una copia del modelo con el campo extras_epayco seguro
+        let dataWithExtras = NewChargeTransactionModel(
+            token_card: newChargeTransactionData.token_card,
+            customer_id: newChargeTransactionData.customer_id,
+            doc_type: newChargeTransactionData.doc_type,
+            doc_number: newChargeTransactionData.doc_number,
+            name: newChargeTransactionData.name,
+            last_name: newChargeTransactionData.last_name,
+            email: newChargeTransactionData.email,
+            bill: newChargeTransactionData.bill,
+            description: newChargeTransactionData.description,
+            value: newChargeTransactionData.value,
+            tax: newChargeTransactionData.tax,
+            tax_base: newChargeTransactionData.tax_base,
+            currency: newChargeTransactionData.currency,
+            dues: newChargeTransactionData.dues,
+            address: newChargeTransactionData.address,
+            phone: newChargeTransactionData.phone,
+            cell_phone: newChargeTransactionData.cell_phone,
+            url_response: newChargeTransactionData.url_response,
+            url_confirmation: newChargeTransactionData.url_confirmation,
+            ip: newChargeTransactionData.ip,
+            extras: newChargeTransactionData.extras,
+            extras_epayco: extrasEpayco // <-- Aquí siempre va el objeto con extra5: "P48"
+        )
 
-    let url = K.urlBase + "/payment/v1/charge/create"
-    let networkManager = NetworkManager<ChargeTransactionModel>(url, delegate: self)
-    let newTransaction = networkManager.performRequest(httpMethod: "POST", requestBody: dataWithExtras)
-    return newTransaction
-}
+        let url = K.urlBase + "/payment/v1/charge/create"
+        let networkManager = NetworkManager<ChargeTransactionModel>(url, delegate: self)
+        let result = networkManager.performRequest(httpMethod: "POST", requestBody: dataWithExtras)
+        
+        return result
+    }
     
-    public func create(newChargeTransactionData: NewChargeTransactionModel, splitData: SplitDataModel) -> ChargeTransactionModel? {
+    /// Crea una transacción de carga con split de pago
+    /// - Parameters:
+    ///   - newChargeTransactionData: Datos base de la transacción
+    ///   - splitData: Datos del split/división de pago
+    /// - Returns: Result con transacción exitosa o error detallado
+    public func create(newChargeTransactionData: NewChargeTransactionModel, splitData: SplitDataModel) 
+        -> Result<ChargeTransactionModel, ErrorResponse> {
         
         let extrasEpayco = newChargeTransactionData.extras_epayco ?? ExtrasModel(
             extra1: nil, extra2: nil, extra3: nil, extra4: nil,
+            extra5: "P48",
             extra6: nil, extra7: nil, extra8: nil, extra9: nil, extra10: nil
         )
+        
         let url = K.urlBase + "/payment/v1/charge/create"
         let networkManager = NetworkManager<ChargeTransactionModel>(url, delegate: self)
+        
         let newChargeSplitTransactionData = NewChargeSplitTransactionModel(
             token_card: newChargeTransactionData.token_card,
             customer_id: newChargeTransactionData.customer_id,
@@ -96,16 +111,22 @@ public struct Charge: NetworkManagerDelegate {
             extras: nil,
             extras_epayco: extrasEpayco
         )
-        let newTransaction = networkManager.performRequest(httpMethod: "POST", requestBody: newChargeSplitTransactionData)
         
-        return newTransaction
+        let result = networkManager.performRequest(httpMethod: "POST", requestBody: newChargeSplitTransactionData)
+        
+        return result
     }
     
-    public func getTransaction(refPayco: String) -> ChargeTransactionGetModel? {
-        let url = K.baseUrlSecure + "/restpagos/transaction/response.json?ref_payco=" + refPayco + "&public_key=" + self.publicKey
-        let networkManager = NetworkManager<ChargeTransactionGetModel>(url, delegate: self)
-        let foundTransaction = networkManager.performRequest(httpMethod: "GET", requestBody: "")
+    /// Obtiene una transacción previamente creada
+    /// - Parameter refPayco: Referencia/ID de la transacción en Epayco
+    /// - Returns: Result con transacción encontrada o error
+    public func getTransaction(refPayco: String) 
+        -> Result<ChargeTransactionGetModel, ErrorResponse> {
         
-        return foundTransaction
+        let url = K.baseUrlSecure + K.entorno + "/transaction/response.json?ref_payco=" + refPayco + "&public_key=" + self.publicKey
+        let networkManager = NetworkManager<ChargeTransactionGetModel>(url, delegate: self)
+        let result = networkManager.performRequest(httpMethod: "GET", requestBody: "")
+        
+        return result
     }
 }
